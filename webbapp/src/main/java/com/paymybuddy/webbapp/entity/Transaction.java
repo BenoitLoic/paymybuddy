@@ -1,19 +1,10 @@
-package com.paymybuddy.entity;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+package com.paymybuddy.webbapp.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "transaction")
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
 public class Transaction {
 
     @Id

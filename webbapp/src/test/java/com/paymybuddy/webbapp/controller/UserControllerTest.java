@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
-
 import com.paymybuddy.webbapp.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -118,6 +117,31 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonNodes.toString()))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
+    }
+
+    @Test
+    public void updateUserValid() throws Exception {
+
+        //        GIVEN
+        // création du Json en param
+        ObjectMapper obm = new ObjectMapper();
+        ObjectNode objectNode = obm.createObjectNode();
+        objectNode.set("id", TextNode.valueOf(String.valueOf(id)));
+        objectNode.set("firstName", TextNode.valueOf(firstName));
+        objectNode.set("lastName", TextNode.valueOf(lastName));
+
+        //        WHEN
+        // on mock la  vérification de la présence de l'id par les services en renvoyant un nouvel user
+        Mockito.when(userServiceMock.findById(Mockito.any())).thenReturn(new User());
+
+        //        THEN
+        //on vérifie qu'on a bien un retour http 201
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/V1/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectNode.toString()))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+
     }
 
 }

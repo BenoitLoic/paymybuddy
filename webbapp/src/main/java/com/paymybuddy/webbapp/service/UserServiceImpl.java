@@ -2,10 +2,10 @@ package com.paymybuddy.webbapp.service;
 
 import com.paymybuddy.webbapp.dao.UserDao;
 import com.paymybuddy.webbapp.entity.User;
+import com.paymybuddy.webbapp.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,11 +13,12 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-
+    private final UserRepository userRepository;
     private final UserDao userDao;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserRepository userRepository, UserDao userDao) {
+        this.userRepository = userRepository;
         this.userDao = userDao;
     }
 
@@ -25,12 +26,12 @@ public class UserServiceImpl implements UserService {
      * This method save the given user in DB by calling Dao.
      * this method is used to create a new user
      * or update an existing user
+     *
      * @param theUser to save
      */
     @Override
-    @Transactional
     public void save(User theUser) {
-        userDao.save(theUser);
+        userRepository.save(theUser);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-        return userDao.findAll();
+        return userRepository.findAll();
     }
 
     @Override

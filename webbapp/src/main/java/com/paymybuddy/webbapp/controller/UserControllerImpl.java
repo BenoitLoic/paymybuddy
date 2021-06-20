@@ -5,11 +5,12 @@ import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
+@EnableWebSecurity(debug = true)
 @RestController
 @RequestMapping("/V1")
 public class UserControllerImpl implements UserController {
@@ -52,8 +53,9 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @GetMapping("/users")
     public List<User> findAll() {
-        return null;
+        return userService.findAll();
     }
 
     @Override
