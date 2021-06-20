@@ -3,6 +3,7 @@ package com.paymybuddy.webbapp.service;
 import com.paymybuddy.webbapp.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     /**
@@ -16,4 +17,6 @@ public interface UserService {
     public List<User> findAll();
 
     public User findById(int theId);
+
+    public Optional<User> findByEmail(String email);
 }

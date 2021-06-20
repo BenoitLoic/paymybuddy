@@ -2,10 +2,13 @@ package com.paymybuddy.webbapp.controller;
 
 
 import com.paymybuddy.webbapp.entity.User;
+import com.paymybuddy.webbapp.model.CrmUser;
 import com.paymybuddy.webbapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,11 +30,31 @@ public class UserControllerImpl implements UserController {
     @Override
     @PostMapping("/user")
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody @Valid User user) {
+    public User createUser(@Valid @ModelAttribute("crmUser") CrmUser crmUser, BindingResult bindingResult, Model model) {
 
-        //set id to 0 to force save in Dao
+        // Validation form
+//        if (bindingResult.hasErrors()){
+//            throw new IllegalArgumentException("There is error in registration form.");
+//        }
 
-        user.setId(0);
+        // Check if user already exist
+//        if (userService.findByEmail(user.getEmail()).isPresent()){
+//            throw new DataAlreadyExistException("Account already exist for email: "+user.getEmail());
+//        }
+
+        // create user
+User user = new User();
+        user.setFirstName(crmUser.getFirstName());
+        user.setLastName(crmUser.getLastName());
+        user.setEmail(crmUser.getEmail());
+        user.setPassword(crmUser.getPassword());
+        user.setAddressNumber(crmUser.getAddressNumber());
+        user.setAddressPrefix(crmUser.getAddressPrefix());
+        user.setAddressStreet(crmUser.getAddressStreet());
+        user.setPhone(crmUser.getPhone());
+        user.setZip(crmUser.getZip());
+        user.setCity(crmUser.getCity());
+        System.out.println(user);
         userService.save(user);
 
         return user;

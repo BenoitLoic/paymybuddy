@@ -12,8 +12,18 @@ public class LoginControllerImpl implements LoginController {
         return "home";
     }
 
+    @Override
     @GetMapping("/showLoginPage")
     public String showLoginPage(){
         return "plain-login";
     }
+
+
+    @Override
+    @GetMapping("/signUp")
+    public String registerNewUser() {
+        return "registration-page";
+    }
+
+
 }
