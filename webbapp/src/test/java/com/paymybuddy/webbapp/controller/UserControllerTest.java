@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.paymybuddy.webbapp.entity.User;
-import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
+import com.paymybuddy.webbapp.exception.DataNotFindException;
 import com.paymybuddy.webbapp.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +27,9 @@ public class UserControllerTest {
     MockMvc mockMvc;
     @MockBean
     UserServiceImpl userServiceMock;
+    @InjectMocks
+    UserControllerImpl userController;
+
 
     private int id = 1;
     private String email = "testmail";
@@ -50,97 +54,200 @@ public class UserControllerTest {
         return user;
     }
 
+//
+//    @Test
+//    public void createUserValid() throws Exception {
+//        //GIVEN
+//        ObjectMapper obm = new ObjectMapper();
+//        ObjectNode jsonNodes = obm.createObjectNode();
+//        jsonNodes.set("firstName", TextNode.valueOf(firstName));
+//        jsonNodes.set("lastName", TextNode.valueOf(lastName));
+//        jsonNodes.set("email", TextNode.valueOf(email));
+//        jsonNodes.set("password", TextNode.valueOf(password));
+//
+//        //WHEN
+//
+//        //THEN
+//        mockMvc.perform(
+//                MockMvcRequestBuilders.post("/V1/user")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(jsonNodes.toString()))
+//                .andExpect(MockMvcResultMatchers.status().isCreated());
+//
+//    }
+//
+//    @Test
+//    public void createUserInvalid() throws Exception {
+//
+//        //GIVEN
+//        ObjectMapper obm = new ObjectMapper();
+//        ObjectNode jsonNodes = obm.createObjectNode();
+//        jsonNodes.set("firstName", TextNode.valueOf(firstName));
+//        jsonNodes.set("lastName", TextNode.valueOf(lastName));
+//        jsonNodes.set("email", TextNode.valueOf(email));
+//        jsonNodes.set("password", TextNode.valueOf(" "));
+//
+//        //WHEN
+//
+//        //THEN
+//        mockMvc.perform(
+//                MockMvcRequestBuilders.post("/V1/user")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(jsonNodes.toString()))
+//                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+//
+//    }
+//
+//    @Test
+//    public void createUserWhen_UserAlreadyExist() throws Exception {
+//
+////        GIVEN
+//        ObjectMapper obm = new ObjectMapper();
+//        ObjectNode jsonNodes = obm.createObjectNode();
+//        jsonNodes.set("firstName", TextNode.valueOf(firstName));
+//        jsonNodes.set("lastName", TextNode.valueOf(lastName));
+//        jsonNodes.set("email", TextNode.valueOf(email));
+//        jsonNodes.set("password", TextNode.valueOf(password));
+//
+////        WHEN
+//        Mockito.doThrow(DataAlreadyExistException.class)
+//                .when(userServiceMock)
+//                .save(Mockito.any());
+//
+////        THEN
+//
+//        mockMvc.perform(
+//                MockMvcRequestBuilders.post("/register/user")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(jsonNodes.toString()))
+//                .andExpect(MockMvcResultMatchers.status().isConflict());
+//    }
 
     @Test
-    public void createUserValid() throws Exception {
-        //GIVEN
-        ObjectMapper obm = new ObjectMapper();
-        ObjectNode jsonNodes = obm.createObjectNode();
+    public void findAllValid() throws Exception {
+
+        // GIVEN
+
+        // WHEN
+
+        // THEN
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/V1/users"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+
+
+    }
+
+    @Test
+    public void updateUserValid() throws Exception {
+        // GIVEN
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode jsonNodes = objectMapper.createObjectNode();
+        jsonNodes.set("id", TextNode.valueOf("1"));
         jsonNodes.set("firstName", TextNode.valueOf(firstName));
         jsonNodes.set("lastName", TextNode.valueOf(lastName));
         jsonNodes.set("email", TextNode.valueOf(email));
-        jsonNodes.set("password", TextNode.valueOf(password));
 
-        //WHEN
+        // WHEN
 
-        //THEN
+        // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/V1/user")
+                MockMvcRequestBuilders.put("/V1/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonNodes.toString()))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }
 
-    @Test
-    public void createUserInvalid() throws Exception {
+//    @Test
+//    public void updateUserInvalid() throws Exception {
+//
+//        // GIVEN
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        ObjectNode jsonNodes = objectMapper.createObjectNode();
+//        jsonNodes.set("id", TextNode.valueOf("0"));
+//        jsonNodes.set("firstName", TextNode.valueOf(firstName));
+//        jsonNodes.set("lastName", TextNode.valueOf(lastName));
+//        jsonNodes.set("email", TextNode.valueOf(email));
+//
+//        // WHEN
+//
+//        // THEN
+//        mockMvc.perform(
+//                MockMvcRequestBuilders.put("/V1/user")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(jsonNodes.toString()))
+//                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+//
+//
+//    }
 
-        //GIVEN
-        ObjectMapper obm = new ObjectMapper();
-        ObjectNode jsonNodes = obm.createObjectNode();
+
+    @Test
+    public void updateUserValidWhenUserDontExist_ShouldThrowDataNotFindException() throws Exception {
+        // GIVEN
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode jsonNodes = objectMapper.createObjectNode();
+        jsonNodes.set("id", TextNode.valueOf("1"));
         jsonNodes.set("firstName", TextNode.valueOf(firstName));
         jsonNodes.set("lastName", TextNode.valueOf(lastName));
         jsonNodes.set("email", TextNode.valueOf(email));
-        jsonNodes.set("password", TextNode.valueOf(" "));
 
-        //WHEN
-
-        //THEN
+        // WHEN
+        Mockito.doThrow(DataNotFindException.class).when(userServiceMock).update(Mockito.any());
+        // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/V1/user")
+                MockMvcRequestBuilders.put("/V1/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonNodes.toString()))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    }
+
+    @Test
+    public void deleteUserValid() throws Exception {
+
+        // GIVEN
+        String validParam = String.valueOf(id);
+        // WHEN
+
+        // THEN
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/V1/user")
+                        .param("id", validParam))
+                .andExpect(MockMvcResultMatchers.status().isAccepted());
+
+    }
+
+    @Test
+    public void deleteUserInvalid() throws Exception {
+
+        // GIVEN
+        String invalidParam = null;
+
+        // WHEN
+
+        // THEN
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/V1/user")
+                        .param("id", invalidParam))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 
     @Test
-    public void createUserWhen_UserAlreadyExist() throws Exception {
+    public void deleteUserValidWhenUserDontExist_ShouldThrowDataNotFindException() throws Exception {
 
-//        GIVEN
-        ObjectMapper obm = new ObjectMapper();
-        ObjectNode jsonNodes = obm.createObjectNode();
-        jsonNodes.set("firstName", TextNode.valueOf(firstName));
-        jsonNodes.set("lastName", TextNode.valueOf(lastName));
-        jsonNodes.set("email", TextNode.valueOf(email));
-        jsonNodes.set("password", TextNode.valueOf(password));
-
-//        WHEN
-        Mockito.doThrow(DataAlreadyExistException.class)
-                .when(userServiceMock)
-                .save(Mockito.any());
-
-//        THEN
-
+        // GIVEN
+        String validParam = "1";
+        // WHEN
+        Mockito.doThrow(DataNotFindException.class).when(userServiceMock).deleteUserById(Mockito.anyInt());
+        // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/V1/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonNodes.toString()))
-                .andExpect(MockMvcResultMatchers.status().isConflict());
-    }
-
-    @Test
-    public void updateUserValid() throws Exception {
-
-        //        GIVEN
-        // création du Json en param
-        ObjectMapper obm = new ObjectMapper();
-        ObjectNode objectNode = obm.createObjectNode();
-        objectNode.set("id", TextNode.valueOf(String.valueOf(id)));
-        objectNode.set("firstName", TextNode.valueOf(firstName));
-        objectNode.set("lastName", TextNode.valueOf(lastName));
-
-        //        WHEN
-        // on mock la  vérification de la présence de l'id par les services en renvoyant un nouvel user
-        Mockito.when(userServiceMock.findById(Mockito.any())).thenReturn(new User());
-
-        //        THEN
-        //on vérifie qu'on a bien un retour http 201
-        mockMvc.perform(
-                MockMvcRequestBuilders.put("/V1/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectNode.toString()))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+                MockMvcRequestBuilders.delete("/V1/user")
+                        .param("id", validParam))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
 
     }
 

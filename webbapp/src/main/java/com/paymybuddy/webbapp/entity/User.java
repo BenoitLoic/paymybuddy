@@ -35,6 +35,7 @@ public class User {
     @Column(name = "balance")
     private int balance = 0;
 
+    @NotBlank(message = "Phone is mandatory.")
     @Column(name = "phone")
     private String phone;
 

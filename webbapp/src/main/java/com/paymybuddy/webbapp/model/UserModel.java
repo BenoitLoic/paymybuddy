@@ -4,18 +4,16 @@ import javax.validation.constraints.NotBlank;
 
 public class UserModel {
 
+
+    @NotBlank(message = "Last Name is mandatory.")
     private int id;
 
-    @NotBlank(message = "Last Name is mandatory.")
     private String email;
 
-    @NotBlank(message = "Last Name is mandatory.")
     private String lastName;
 
-    @NotBlank(message = "Last Name is mandatory.")
     private String firstName;
 
-    @NotBlank(message = "Last Name is mandatory.")
     private String password;
 
     private int balance;

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Pay my Buddy</title>
+    <title>Welcome to Pay my Buddy!</title>
     <!--    Bootstrap ref   -->
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -13,18 +13,11 @@
 
 </head>
 <body>
+<h1>Le titre de ma page d'acceuil.</h1>
+<h2>le sous titre de la page d'acceuil</h2>
+<p>et blablabla</p>
 <div>
-    <div>
-        <form th:action="@{/userAccount}" method="get">
-    </div>
+    <a th:href="@{/showLoginPage}" class="btn btn-primary">Start</a>
 </div>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Logout"/>
-</form>
-
-<div>
-    <a th:href="@{}"></a>
-</div>
-
 </body>
 </html>

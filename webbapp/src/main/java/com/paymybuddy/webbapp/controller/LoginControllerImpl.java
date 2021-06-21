@@ -9,7 +9,7 @@ public class LoginControllerImpl implements LoginController {
     @Override
     @GetMapping("/")
     public String welcomePage() {
-        return "home";
+        return "welcome-page";
     }
 
     @Override

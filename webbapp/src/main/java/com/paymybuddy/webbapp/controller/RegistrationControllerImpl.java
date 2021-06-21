@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/registration")
@@ -44,7 +43,7 @@ public class RegistrationControllerImpl implements RegistrationController {
     @Override
     @PostMapping("/createNewUser")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerNewUser(User newUser, BindingResult bindingResult) {
+    public String registerNewUser(@Valid @RequestBody User newUser, BindingResult bindingResult) {
 
         // Check if there is error in validation
         if (bindingResult.hasErrors()) {

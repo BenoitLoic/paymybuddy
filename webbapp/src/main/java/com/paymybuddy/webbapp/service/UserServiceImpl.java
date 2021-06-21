@@ -1,9 +1,11 @@
 package com.paymybuddy.webbapp.service;
 
-import com.paymybuddy.webbapp.dao.UserDao;
 import com.paymybuddy.webbapp.entity.User;
+import com.paymybuddy.webbapp.exception.DataNotFindException;
+import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,13 +18,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserDao userDao;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.userDao = userDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -37,14 +38,44 @@ public class UserServiceImpl implements UserService {
     public void save(User theUser) {
 
         // Hash password using BCrypt
-        theUser.setPassword(bCryptPasswordEncoder.encode(theUser.getPassword()));
+        if (theUser.getPassword() != null) {
+            theUser.setPassword(bCryptPasswordEncoder.encode(theUser.getPassword()));
+        }
         // Save user using JpaRepository.save
         userRepository.save(theUser);
     }
 
+    /**
+     * This method update the user account by calling repository.
+     *
+     * @param theUser to update
+     */
+    @Override
+    public void update(UserModel theUser) {
+
+        if (!userRepository.existsById(theUser.getId())) {
+            throw new DataNotFindException("Can't find account for user: " + theUser.getEmail());
+        }
+
+        // Copy field from user model to user entity
+        User userEntity = new User();
+        BeanUtils.copyProperties(theUser, userEntity);
+
+        userRepository.save(userEntity);
+
+    }
+
+
     @Override
     public void deleteUserById(int theId) {
-        userDao.deleteById(theId);
+
+        // Check if user exist
+        if (!userRepository.existsById(theId)) {
+            throw new DataNotFindException("KO - can't find user with id: " + theId);
+        }
+        // Delete user
+        userRepository.deleteById(theId);
+
     }
 
     @Override
@@ -53,8 +84,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(int theId) {
-        return userDao.findById(theId);
+    public Optional<User> findById(int theId) {
+        return userRepository.findById(theId);
     }
 
     @Override

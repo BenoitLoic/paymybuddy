@@ -2,8 +2,10 @@ package com.paymybuddy.webbapp.controller;
 
 
 import com.paymybuddy.webbapp.entity.User;
+import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,20 +20,24 @@ public class UserControllerImpl implements UserController {
     private UserService userService;
 
 
-
     @Override
-    public String deleteUser(int id) {
+    @DeleteMapping("/user")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public String deleteUser(@RequestParam int id) {
 
-        return null;
+        userService.deleteUserById(id);
+
+        return "Account for id: " + id + " deleted.";
     }
 
     @Override
     @PutMapping("/user")
-    public User updateUser(@RequestBody User theUser) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String updateUser(@RequestBody UserModel theUser) {
 
-        userService.save(theUser);
+        userService.update(theUser);
 
-        return theUser;
+        return "user: " + theUser.getEmail() + " updated.";
     }
 
     @Override
