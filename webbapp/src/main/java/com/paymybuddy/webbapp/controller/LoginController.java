@@ -8,7 +8,4 @@ public interface LoginController {
 
    String showLoginPage();
 
-   String registerNewUser();
-
-
 }

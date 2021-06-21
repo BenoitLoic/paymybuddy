@@ -2,7 +2,7 @@ package com.paymybuddy.webbapp.model;
 
 import javax.validation.constraints.NotBlank;
 
-public class CrmUser {
+public class UserModel {
 
     private int id;
 
@@ -32,7 +32,7 @@ public class CrmUser {
 
     private String city;
 
-    public CrmUser() {
+    public UserModel() {
     }
 
     public int getId() {

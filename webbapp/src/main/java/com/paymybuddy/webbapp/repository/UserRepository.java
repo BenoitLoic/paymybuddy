@@ -11,9 +11,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Integer> {
 
 
-    @Override
-    <S extends User> S save(S s);
-
     Optional<User> findById(int id);
 
     Optional<User> findByEmail(String email);
