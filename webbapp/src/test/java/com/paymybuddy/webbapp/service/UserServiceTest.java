@@ -68,10 +68,12 @@ class UserServiceTest {
         userToUpdate.setFirstName(firstName);
         userToUpdate.setLastName(lastName);
         userToUpdate.setId(id);
-
+        userToUpdate.setEmail(email);
+        User user = new User();
 
         // WHEN
         Mockito.when(userRepositoryMock.existsById(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(userRepositoryMock.getById(Mockito.anyInt())).thenReturn(user);
         userService.update(userToUpdate);
         // THEN
 

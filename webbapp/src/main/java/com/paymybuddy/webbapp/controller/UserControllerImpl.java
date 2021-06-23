@@ -33,7 +33,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @PutMapping("/user")
     @ResponseStatus(HttpStatus.CREATED)
-    public String updateUser(@RequestBody UserModel theUser) {
+    public String updateUser(UserModel theUser) {
 
         userService.update(theUser);
 

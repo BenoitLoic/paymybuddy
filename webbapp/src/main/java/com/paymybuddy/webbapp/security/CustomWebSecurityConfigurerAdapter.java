@@ -25,10 +25,14 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/V1/users").authenticated()
-                .antMatchers("/","/V1/user").permitAll()
+                .antMatchers("/home,/home/**, /test").authenticated()
+                .antMatchers("/").permitAll()
                 .and()
-                .formLogin().loginPage("/showLoginPage").loginProcessingUrl("/authenticateTheUser").permitAll() ;
+                .formLogin()
+                .loginPage("/showLoginPage")
+                .loginProcessingUrl("/authenticateTheUser")
+                .defaultSuccessUrl("/home")
+                .permitAll();
     }
 
 
@@ -43,10 +47,9 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
 //    }
 
 
-    //TODO:
     @Bean
     public BCryptPasswordEncoder getPasswordEncoder() {
-        //BCryptPE permet de hasher le mdp. la valeur de hash par default est 10.
+        //BCrypt permet de hasher le mdp. la valeur de hash par default est 10.
         return new BCryptPasswordEncoder();
     }
 }

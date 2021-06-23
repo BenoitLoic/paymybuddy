@@ -2,7 +2,6 @@ package com.paymybuddy.webbapp.entity;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 
 @Entity
@@ -16,26 +15,26 @@ public class User {
     @Column(name = "id")
     private int id;
 
-    @NotBlank(message = "Email is mandatory.")
+
     @Column(name = "email")
     private String email;
 
-    @NotBlank(message = "Last Name is mandatory.")
+
     @Column(name = "last_name")
     private String lastName;
 
-    @NotBlank(message = "First Name is mandatory.")
+
     @Column(name = "first_name")
     private String firstName;
 
-    @NotBlank(message = "Password is mandatory.")
+
     @Column(name = "password")
     private String password;
 
     @Column(name = "balance")
-    private int balance = 0;
+    private int balance;
 
-    @NotBlank(message = "Phone is mandatory.")
+
     @Column(name = "phone")
     private String phone;
 
@@ -162,7 +161,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "UserEntity{" +
+        return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", lastName='" + lastName + '\'' +

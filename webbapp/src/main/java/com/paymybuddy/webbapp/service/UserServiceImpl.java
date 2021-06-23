@@ -5,7 +5,6 @@ import com.paymybuddy.webbapp.exception.DataNotFindException;
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,11 +56,48 @@ public class UserServiceImpl implements UserService {
             throw new DataNotFindException("Can't find account for user: " + theUser.getEmail());
         }
 
-        // Copy field from user model to user entity
-        User userEntity = new User();
-        BeanUtils.copyProperties(theUser, userEntity);
+        // Copy non null field from user model to user entity
+        User userEntity = userRepository.getById(theUser.getId());
+
+        if (theUser.getFirstName() != null && !theUser.getFirstName().isBlank()) {
+            userEntity.setFirstName(theUser.getFirstName());
+        }
+
+        if (theUser.getLastName() != null && !theUser.getLastName().isBlank()) {
+            userEntity.setLastName(theUser.getLastName());
+        }
+
+        if (theUser.getEmail() != null && !theUser.getEmail().isBlank()) {
+            userEntity.setEmail(theUser.getEmail());
+        }
+
+        if (theUser.getPassword() != null && !theUser.getPassword().isBlank()) {
+            userEntity.setPassword(bCryptPasswordEncoder.encode(theUser.getPassword()));
+        }
+        if (theUser.getPhone() != null && !theUser.getPhone().isBlank()) {
+            userEntity.setPhone(theUser.getPhone());
+        }
+
+        if (theUser.getAddressPrefix() != null && !theUser.getAddressPrefix().isBlank()) {
+            userEntity.setAddressPrefix(theUser.getAddressPrefix());
+        }
+        if (theUser.getAddressStreet() != null && !theUser.getAddressStreet().isBlank()) {
+            userEntity.setAddressStreet(theUser.getAddressStreet());
+        }
+        if (theUser.getAddressStreet() != null && !theUser.getAddressNumber().isBlank()) {
+            userEntity.setAddressNumber(theUser.getAddressNumber());
+        }
+        if (theUser.getCity() != null && !theUser.getCity().isBlank()) {
+            userEntity.setCity(theUser.getCity());
+        }
+
+        if (theUser.getZip() != null && !theUser.getZip().isBlank()) {
+            userEntity.setZip(theUser.getZip());
+        }
+
 
         userRepository.save(userEntity);
+
 
     }
 

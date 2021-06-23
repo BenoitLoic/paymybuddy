@@ -1,11 +1,8 @@
 package com.paymybuddy.webbapp.model;
 
-import javax.validation.constraints.NotBlank;
-
 public class UserModel {
 
 
-    @NotBlank(message = "Last Name is mandatory.")
     private int id;
 
     private String email;
@@ -131,7 +128,7 @@ public class UserModel {
 
     @Override
     public String toString() {
-        return "CrmUser{" +
+        return "UserModel{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", lastName='" + lastName + '\'' +

@@ -1,6 +1,8 @@
 package com.paymybuddy.webbapp.controller;
 
 
+import com.paymybuddy.webbapp.model.UserModel;
+
 public interface LoginController {
 
 
@@ -8,4 +10,5 @@ public interface LoginController {
 
    String showLoginPage();
 
+   String  testUserAccount(UserModel theUser);
 }

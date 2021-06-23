@@ -43,7 +43,7 @@ public class RegistrationControllerImpl implements RegistrationController {
     @Override
     @PostMapping("/createNewUser")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerNewUser(@Valid @RequestBody User newUser, BindingResult bindingResult) {
+    public String registerNewUser(@Valid User newUser, BindingResult bindingResult) {
 
         // Check if there is error in validation
         if (bindingResult.hasErrors()) {
