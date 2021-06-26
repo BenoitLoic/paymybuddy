@@ -2,10 +2,12 @@ package com.paymybuddy.webbapp.entity;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
-@Table(name = "user",uniqueConstraints = {
+@Table(name = "user", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
 public class User {
@@ -52,6 +54,20 @@ public class User {
 
     @Column(name = "city")
     private String city;
+
+
+    @ManyToMany
+    @JoinTable(name = "contact",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "contact_id"))
+    private Set<User> contactList = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "contact",
+            joinColumns = @JoinColumn(name = "contact_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> asContactOfList = new HashSet<>();
+
 
     public User() {
     }
@@ -157,6 +173,14 @@ public class User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Set<User> getContactList() {
+        return contactList;
+    }
+
+    public Set<User> getAsContactOfList() {
+        return asContactOfList;
     }
 
     @Override

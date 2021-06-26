@@ -46,10 +46,7 @@ public class UserControllerImpl implements UserController {
         return userService.findAll();
     }
 
-    @Override
-    public User detUserById(int theId) {
-        return null;
-    }
+
 
 
 }

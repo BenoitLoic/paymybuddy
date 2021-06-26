@@ -1,12 +1,12 @@
 package com.paymybuddy.webbapp.controller;
 
-import com.paymybuddy.webbapp.model.UserModel;
+import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+
 @Slf4j
 @Controller
 public class LoginControllerImpl implements LoginController {
@@ -29,16 +29,28 @@ public class LoginControllerImpl implements LoginController {
     }
 
 
+    @GetMapping("/test")
+    public void testUserAccount() {
 
-    @PutMapping("/test")
-    public String testUserAccount(UserModel theUser) {
-
-        System.out.println("param: "+ theUser);
+//        System.out.println("param: " + theUser);
 
 
         System.out.println("appel de service");
 
-        userService.update(theUser);
-return "plain-login";
+        User myUser= new User();
+        myUser = userService.findById(1).get();
+        System.out.println("MY CONTACT LIST : ");
+        for (User user: myUser.getContactList()
+             ) {
+            System.out.println(user);
+        }
+        System.out.println("AS CONTACT LIST: ");
+        for (User user: myUser.getAsContactOfList()
+        ) {
+            System.out.println(user);
+        }
+
+        System.out.println(userService.findById(1).get());
+
     }
 }

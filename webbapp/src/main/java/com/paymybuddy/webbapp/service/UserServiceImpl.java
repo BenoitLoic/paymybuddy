@@ -1,6 +1,8 @@
 package com.paymybuddy.webbapp.service;
 
+import com.paymybuddy.webbapp.dto.ContactDto;
 import com.paymybuddy.webbapp.entity.User;
+import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
 import com.paymybuddy.webbapp.exception.DataNotFindException;
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.repository.UserRepository;
@@ -9,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 
 @Log4j2
 @Service
@@ -127,5 +132,85 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    /**
+     * This method will add a new contact to the contact list of the current user using repository.
+     *
+     * @param contactEmail the email of the contact to add
+     * @param userEmail    the email of the current user
+     * @return the firstName + " " + lastName of the new contact
+     */
+    @Override
+    public String addNewContact(String contactEmail, String userEmail) {
+
+        // check if user for contactEmail exist
+        Optional<User> contactOp = userRepository.findByEmail(contactEmail);
+        if (contactOp.isEmpty()) {
+            throw new DataNotFindException("KO - can't find user: " + contactEmail);
+        }
+        User contact = contactOp.get();
+
+        // check if contact already exist in userContactList
+        User user = userRepository.findByEmail(userEmail).get();
+        if (user.getContactList().contains(contact)) {
+            throw new DataAlreadyExistException("KO - This contact is already linked, contact: " + contactEmail);
+        }
+
+        // save and return firstName and lastName of contact
+        user.getContactList().add(contact);
+        userRepository.save(user);
+
+        return contact.getFirstName() + " " + contact.getLastName();
+    }
+
+    /**
+     * This method will delete the given contact from the contact list of the current user
+     *
+     * @param contactId the id of the contact to delete from list
+     * @param userEmail the email of the current user
+     * @return the firstName + " " + lastName of the deleted contact
+     */
+    @Override
+    public ContactDto deleteContact(int contactId, String userEmail) {
+
+        // get current user
+        User user = userRepository.findByEmail(userEmail).get();
+        ContactDto contactDto = new ContactDto();
+
+        // check if contact is present in contactList
+        Set<User> contactList = user.getContactList();
+        boolean deleted = false;
+        for (User contact : contactList) {
+            if (contact.getId() == contactId) {
+                // create dto of contact for return
+                contactDto.setEmail(contact.getEmail());
+                contactDto.setFirstName(contact.getFirstName());
+                contactDto.setLastName(contact.getLastName());
+                deleted = true;
+                // remove contact from list
+                contactList.remove(contact);
+
+            }
+        }
+        if (!deleted) {
+            throw new DataNotFindException("Error - can't find user with id: " + contactId);
+        }
+        System.out.println("deleted : " + deleted + " dto: " + contactDto);
+        //  save
+        userRepository.save(user);
+        return contactDto;
+
+    }
+
+    /**
+     * This method returns a collection of all the contacts of the given user.
+     *
+     * @param userEmail the user email.
+     * @return all the contacts
+     */
+    @Override
+    public Collection<ContactDto> getAllContact(String userEmail) {
+        return null;
     }
 }

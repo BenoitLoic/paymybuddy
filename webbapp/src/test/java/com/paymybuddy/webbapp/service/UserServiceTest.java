@@ -1,7 +1,9 @@
 package com.paymybuddy.webbapp.service;
 
 
+import com.paymybuddy.webbapp.dto.ContactDto;
 import com.paymybuddy.webbapp.entity.User;
+import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
 import com.paymybuddy.webbapp.exception.DataNotFindException;
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.repository.UserRepository;
@@ -13,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -28,8 +32,8 @@ class UserServiceTest {
 
     private int id = 1;
     private String email = "testmail";
-    private String lastName = "John";
-    private String firstName = "Doe";
+    private String lastName = "Doe";
+    private String firstName = "John";
     private String password = "testpassword";
     private int balance = 0;
     private String phone;
@@ -129,6 +133,99 @@ class UserServiceTest {
         // THEN
         Assertions.assertThrows(DataNotFindException.class, () -> userService.deleteUserById(validUserId));
 
+
+    }
+
+    @Test
+    public void addNewContactValid() {
+
+        // GIVEN
+        User user1 = new User(email, lastName, firstName, password);
+        user1.setId(1);
+        Optional<User> userToAdd = Optional.of(user1);
+        User user2 = new User(email + 1, lastName, firstName, password);
+        user2.setId(2);
+        Optional<User> userAccount = Optional.of(user2);
+
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(userToAdd, userAccount);
+
+        String returnString = userService.addNewContact(email, email + 1);
+        // THEN
+        org.assertj.core.api.Assertions.assertThat(returnString).isEqualTo(firstName + " " + lastName);
+    }
+
+    @Test
+    public void addNewContactWhenContactEmailDontExist_ShouldThrowDataNotFindException() {
+
+        // GIVEN
+        Optional<User> userToAdd = Optional.empty();
+        User user2 = new User(email + 1, lastName, firstName, password);
+        user2.setId(2);
+        Optional<User> userAccount = Optional.of(user2);
+
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(userToAdd, userAccount);
+
+        // THEN
+        Assertions.assertThrows(DataNotFindException.class, () -> userService.addNewContact(email, email + 1));
+    }
+
+    @Test
+    public void addNewContactWhenContactAlreadyExist_ShouldThrowDataAlreadyExist() {
+
+        // GIVEN
+        User user1 = new User(email, lastName, firstName, password);
+        user1.setId(1);
+        Optional<User> userToAdd = Optional.of(user1);
+        User user2 = new User(email + 1, lastName, firstName, password);
+        user2.setId(2);
+        user2.getContactList().add(user1);
+        Optional<User> userAccount = Optional.of(user2);
+
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(userToAdd, userAccount);
+
+
+        // THEN
+        Assertions.assertThrows(DataAlreadyExistException.class, () -> userService.addNewContact(email, email + 1));
+    }
+
+    @Test
+    public void deleteContactValid() {
+
+        // GIVEN
+        User user = new User("userEmail", "userLastName", "userFirstName", "test");
+        User contact = new User(email, lastName, firstName, password);
+        contact.setId(id);
+        user.getContactList().add(contact);
+        ContactDto expectedDto = new ContactDto(firstName, lastName, email);
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
+
+
+        ContactDto actualDto = userService.deleteContact(id, email);
+        // THEN
+        org.assertj.core.api.Assertions.assertThat(actualDto).isEqualTo(expectedDto);
+
+    }
+
+
+    @Test
+    public void deleteContactWhenContactDontExist_ShouldThrowDataNotFindException() {
+
+        // GIVEN
+        User user = new User(email, "userLastName", "userFirstName", "test");
+        User contact = new User("email", lastName, firstName, password);
+        contact.setId(id);
+
+
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
+
+
+        // THEN
+        Assertions.assertThrows(DataNotFindException.class, () -> userService.deleteContact(id, email));
 
     }
 

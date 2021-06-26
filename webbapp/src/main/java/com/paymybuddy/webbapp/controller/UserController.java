@@ -16,7 +16,6 @@ public interface UserController {
 
     public List<User> findAll();
 
-    public User detUserById(int theId);
 
 
 

@@ -25,8 +25,8 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/home,/home/**, /test").authenticated()
-                .antMatchers("/").permitAll()
+                .antMatchers("/home,/home/**").authenticated()
+                .antMatchers("/, /test").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/showLoginPage")
