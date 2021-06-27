@@ -7,6 +7,7 @@ public interface RegistrationController {
 
     /**
      * This method return the registration form to create a new user.
+     *
      * @return html page with registration form
      */
     String signUp();

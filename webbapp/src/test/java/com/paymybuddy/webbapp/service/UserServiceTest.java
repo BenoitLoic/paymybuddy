@@ -16,6 +16,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
 
 
@@ -229,5 +232,44 @@ class UserServiceTest {
 
     }
 
+    @Test
+    public void getContactValid_ShouldReturnAListOfTwoDto() {
+
+        // GIVEN
+        User user = new User(email, lastName, firstName, password);
+        User userContact1 = new User(email + 1, lastName + 1, firstName + 1, password + 1);
+        User userContact2 = new User(email + 2, lastName + 2, firstName + 2, password + 2);
+        user.getContactList().add(userContact1);
+        user.getContactList().add(userContact2);
+
+        ContactDto contactDto1 = new ContactDto(firstName + 1, lastName + 1, email + 1);
+        ContactDto contactDto2 = new ContactDto(firstName + 2, lastName + 2, email + 2);
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
+        Collection<ContactDto> expected = Arrays.asList(contactDto1, contactDto2);
+        Collection<ContactDto> actual = userService.getAllContact(email);
+
+        // THEN
+        org.assertj.core.api.Assertions.assertThat(actual.containsAll(expected)).isTrue();
+
+
+    }
+
+    @Test
+    public void getContactValidWhenNoContactFound_ShouldReturnAnEmptyList() {
+
+        // GIVEN
+        User user = new User(email, lastName, firstName, password);
+
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
+        Collection<ContactDto> expected = new ArrayList<>();
+        Collection<ContactDto> actual = userService.getAllContact(email);
+
+        // THEN
+        org.assertj.core.api.Assertions.assertThat(actual).isEqualTo(expected);
+
+
+    }
 
 }

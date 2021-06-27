@@ -49,7 +49,7 @@ public class AccountController {
 
     @GetMapping("/profile")
     @ResponseStatus(HttpStatus.OK)
-    public String getUserProfile(Principal principal,UserModel userModel) {
+    public String getUserProfile(Principal principal, UserModel userModel) {
         String email = principal.getName();
         if (email == null
                 || userService.findByEmail(email).isEmpty()) {

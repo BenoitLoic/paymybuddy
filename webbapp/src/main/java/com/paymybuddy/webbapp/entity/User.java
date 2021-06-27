@@ -60,13 +60,13 @@ public class User {
     @JoinTable(name = "contact",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "contact_id"))
-    private Set<User> contactList = new HashSet<>();
+    private final Set<User> contactList = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "contact",
             joinColumns = @JoinColumn(name = "contact_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> asContactOfList = new HashSet<>();
+    private final Set<User> asContactOfList = new HashSet<>();
 
 
     public User() {

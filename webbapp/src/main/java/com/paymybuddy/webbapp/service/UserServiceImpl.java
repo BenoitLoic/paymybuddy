@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 @Log4j2
@@ -211,6 +208,28 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Collection<ContactDto> getAllContact(String userEmail) {
-        return null;
+
+        // Get User from repo
+        Optional<User> optionalUser = userRepository.findByEmail(userEmail);
+        User user = new User();
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
+        }
+
+        // Get contact List
+        Set<User> contactList = user.getContactList();
+
+        // Map every contact to its ContactDto
+        Collection<ContactDto> dtoCollection = new ArrayList<>();
+        for (User contact : contactList) {
+            ContactDto temp = new ContactDto(
+                    contact.getFirstName(),
+                    contact.getLastName(),
+                    contact.getEmail());
+            dtoCollection.add(temp);
+        }
+
+        // return a collection of ContactDto
+        return dtoCollection;
     }
 }

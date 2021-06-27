@@ -10,15 +10,15 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private String userName;
-    private String password;
+    private final String userName;
+    private final String password;
     private boolean active;
-    private SimpleGrantedAuthority authority =
+    private final SimpleGrantedAuthority authority =
             new SimpleGrantedAuthority("ROLE_USER");
 
 
     public UserDetailsImpl(User user) {
-        this.userName = user.getEmail() ;
+        this.userName = user.getEmail();
         this.password = user.getPassword();
     }
 

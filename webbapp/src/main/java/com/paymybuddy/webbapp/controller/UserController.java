@@ -8,17 +8,11 @@ import java.util.List;
 public interface UserController {
 
 
+    String deleteUser(int thId);
 
+    String updateUser(UserModel user);
 
-    public String deleteUser(int thId);
-
-    public String updateUser(UserModel user);
-
-    public List<User> findAll();
-
-
-
-
+    List<User> findAll();
 
 
 }

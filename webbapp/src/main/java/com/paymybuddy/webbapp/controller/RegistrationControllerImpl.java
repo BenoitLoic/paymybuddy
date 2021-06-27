@@ -24,6 +24,7 @@ public class RegistrationControllerImpl implements RegistrationController {
 
     /**
      * This method return the registration form to create a new user.
+     *
      * @return html page with registration form
      */
     @Override
@@ -35,8 +36,7 @@ public class RegistrationControllerImpl implements RegistrationController {
     /**
      * This method create a new user in db.
      *
-     *
-     * @param newUser the new user with all field mandatory (except balance and id).
+     * @param newUser       the new user with all field mandatory (except balance and id).
      * @param bindingResult
      * @return html page that confirm registration
      */

@@ -37,15 +37,15 @@ public class LoginControllerImpl implements LoginController {
 
         System.out.println("appel de service");
 
-        User myUser= new User();
+        User myUser = new User();
         myUser = userService.findById(1).get();
         System.out.println("MY CONTACT LIST : ");
-        for (User user: myUser.getContactList()
-             ) {
+        for (User user : myUser.getContactList()
+        ) {
             System.out.println(user);
         }
         System.out.println("AS CONTACT LIST: ");
-        for (User user: myUser.getAsContactOfList()
+        for (User user : myUser.getAsContactOfList()
         ) {
             System.out.println(user);
         }
