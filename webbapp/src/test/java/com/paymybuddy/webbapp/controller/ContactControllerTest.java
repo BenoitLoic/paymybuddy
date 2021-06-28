@@ -24,7 +24,7 @@ import java.util.Collection;
 
 /**
  * ajout d'un contact à partir d'un email
- * suppression à partir d'un id
+ * suppression à partir d'un email
  */
 @WebMvcTest(controllers = ContactControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
