@@ -6,7 +6,7 @@ import java.security.Principal;
 
 /**
  * Interface for ContactController.
- * <p>
+ *
  * Contains method to add and delete a contact from a user account.
  */
 public interface ContactController {
@@ -21,7 +21,7 @@ public interface ContactController {
     /**
      * This method will delete a contact from the ContactList of ths user.
      *
-     * @param id        the id of the contact to delete
+     * @param email the email of the contact to delete
      * @param principal the current user logged in
      */
     void deleteContact(String email, Principal principal);

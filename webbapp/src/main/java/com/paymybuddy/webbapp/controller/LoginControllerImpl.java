@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,13 +31,15 @@ public class LoginControllerImpl implements LoginController {
     }
 
 
-    @GetMapping("/test")
+    @PostMapping("/test")
     @ResponseBody
     public void testUserAccount(@RequestParam String contactEmail) {
-//        contactEmail="test4";
-String userEmail = "loic@mail.com";
 
-        System.out.println(contactEmail);
-        userService.addNewContact(contactEmail, userEmail);
+        String userEmail = "loic@mail.com";
+
+        // vérif que les valeurs e sont pas null
+
+        // appel du service
+
     }
 }
