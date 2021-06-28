@@ -204,10 +204,10 @@ class UserServiceTest {
         user.getContactList().add(contact);
         ContactDto expectedDto = new ContactDto(firstName, lastName, email);
         // WHEN
-        Mockito.when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
+        Mockito.when(userRepositoryMock.findByEmail("userEmail")).thenReturn(Optional.of(user));
 
 
-        ContactDto actualDto = userService.deleteContact(id, email);
+        ContactDto actualDto = userService.deleteContact(email, "userEmail");
         // THEN
         org.assertj.core.api.Assertions.assertThat(actualDto).isEqualTo(expectedDto);
 
@@ -220,7 +220,6 @@ class UserServiceTest {
         // GIVEN
         User user = new User(email, "userLastName", "userFirstName", "test");
         User contact = new User("email", lastName, firstName, password);
-        contact.setId(id);
 
 
         // WHEN
@@ -228,7 +227,7 @@ class UserServiceTest {
 
 
         // THEN
-        Assertions.assertThrows(DataNotFindException.class, () -> userService.deleteContact(id, email));
+        Assertions.assertThrows(DataNotFindException.class, () -> userService.deleteContact("email", email));
 
     }
 

@@ -1,11 +1,12 @@
 package com.paymybuddy.webbapp.controller;
 
-import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -30,27 +31,12 @@ public class LoginControllerImpl implements LoginController {
 
 
     @GetMapping("/test")
-    public void testUserAccount() {
+    @ResponseBody
+    public void testUserAccount(@RequestParam String contactEmail) {
+//        contactEmail="test4";
+String userEmail = "loic@mail.com";
 
-//        System.out.println("param: " + theUser);
-
-
-        System.out.println("appel de service");
-
-        User myUser = new User();
-        myUser = userService.findById(1).get();
-        System.out.println("MY CONTACT LIST : ");
-        for (User user : myUser.getContactList()
-        ) {
-            System.out.println(user);
-        }
-        System.out.println("AS CONTACT LIST: ");
-        for (User user : myUser.getAsContactOfList()
-        ) {
-            System.out.println(user);
-        }
-
-        System.out.println(userService.findById(1).get());
-
+        System.out.println(contactEmail);
+        userService.addNewContact(contactEmail, userEmail);
     }
 }

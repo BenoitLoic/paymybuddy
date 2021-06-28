@@ -66,11 +66,11 @@ public interface UserService {
     /**
      * This method will delete the given contact from the contact list of the current user
      *
-     * @param contactId the id of the contact to delete from list
+     * @param email the email of the contact to delete from list
      * @param userEmail the email of the current user
      * @return the firstName + " " + lastName of the deleted contact
      */
-    ContactDto deleteContact(int contactId, String userEmail);
+    ContactDto deleteContact(String email, String userEmail);
 
     /**
      * This method returns a collection of all the contacts of the given user.

@@ -1,9 +1,8 @@
 package com.paymybuddy.webbapp.controller;
 
-import com.paymybuddy.webbapp.dto.ContactDto;
+import org.springframework.ui.Model;
 
 import java.security.Principal;
-import java.util.Collection;
 
 /**
  * Interface for ContactController.
@@ -14,10 +13,10 @@ public interface ContactController {
     /**
      * This method add a new contact to a user ContactList with the email of its future contact
      *
-     * @param email     email of the contact to add
-     * @param principal current user logged in
+     * @param email  email of the contact to add
+     * //@param principal current user logged in
      */
-    String addContact(String email, Principal principal);
+    String addContact(String email,Principal principal);
 
     /**
      * This method will delete a contact from the ContactList of ths user.
@@ -25,7 +24,7 @@ public interface ContactController {
      * @param id        the id of the contact to delete
      * @param principal the current user logged in
      */
-    void deleteContact(int id, Principal principal);
+    void deleteContact(String email, Principal principal);
 
 
     /**
@@ -34,6 +33,6 @@ public interface ContactController {
      * @param principal the current user.
      * @return the collection of ContactDto
      */
-    Collection<ContactDto> getContact(Principal principal);
+    String getContact(Principal principal, Model model);
 
 }

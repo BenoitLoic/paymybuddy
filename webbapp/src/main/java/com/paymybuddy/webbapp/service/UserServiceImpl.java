@@ -164,12 +164,12 @@ public class UserServiceImpl implements UserService {
     /**
      * This method will delete the given contact from the contact list of the current user
      *
-     * @param contactId the id of the contact to delete from list
+     * @param email the email of the contact to delete from list
      * @param userEmail the email of the current user
      * @return the firstName + " " + lastName of the deleted contact
      */
     @Override
-    public ContactDto deleteContact(int contactId, String userEmail) {
+    public ContactDto deleteContact(String email, String userEmail) {
 
         // get current user
         User user = userRepository.findByEmail(userEmail).get();
@@ -177,22 +177,24 @@ public class UserServiceImpl implements UserService {
 
         // check if contact is present in contactList
         Set<User> contactList = user.getContactList();
+        User userToDelete = new User();
         boolean deleted = false;
         for (User contact : contactList) {
-            if (contact.getId() == contactId) {
+            if (Objects.equals(contact.getEmail(), email)) {
                 // create dto of contact for return
                 contactDto.setEmail(contact.getEmail());
                 contactDto.setFirstName(contact.getFirstName());
                 contactDto.setLastName(contact.getLastName());
                 deleted = true;
                 // remove contact from list
-                contactList.remove(contact);
+               userToDelete= contact;
 
             }
         }
         if (!deleted) {
-            throw new DataNotFindException("Error - can't find user with id: " + contactId);
+            throw new DataNotFindException("Error - can't find user with email: " + email);
         }
+        contactList.remove(userToDelete);
         System.out.println("deleted : " + deleted + " dto: " + contactDto);
         //  save
         userRepository.save(user);

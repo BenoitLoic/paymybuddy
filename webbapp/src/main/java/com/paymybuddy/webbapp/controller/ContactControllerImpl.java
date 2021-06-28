@@ -3,14 +3,17 @@ package com.paymybuddy.webbapp.controller;
 import com.paymybuddy.webbapp.dto.ContactDto;
 import com.paymybuddy.webbapp.exception.UnicornException;
 import com.paymybuddy.webbapp.service.UserService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Collection;
 
+@Log4j2
 @Controller
 public class ContactControllerImpl implements ContactController {
 
@@ -23,45 +26,54 @@ public class ContactControllerImpl implements ContactController {
     }
 
 
+    @GetMapping("/newContactPage")
+    public String newContactForm() {
+        return "newcontact-page";
+    }
+
     /**
      * This method add a new contact to a user ContactList with the email of its future contact
      *
-     * @param contactEmail email of the contact to add
-     * @param principal    current user logged in
+     * @param email of the contact to add
+     *              //     * @param principal    current user logged in
      */
     @Override
     @PostMapping("/newContact")
     @ResponseStatus(HttpStatus.CREATED)
-    public String addContact(String contactEmail, Principal principal) {
+    public String addContact(@RequestParam String email, Principal principal) {
 
-        if (contactEmail == null || contactEmail.isBlank()) {
+        if (email == null || email.isBlank()) {
+            System.out.println("error contactEmail == null");
             throw new UnicornException("Hé Oh c'est nul !");
         }
-        if (principal.getName() == null) {
+        if (principal == null || principal.getName() == null) {
+            log.error("Error - user not logged in.");
             return "plain-login";
         }
         String userEmail = principal.getName();
 
-        return userService.addNewContact(contactEmail, userEmail);
+        System.out.println(email);
+        userService.addNewContact(email, userEmail);
+        return "redirect://home/getContact";
 
     }
 
     /**
      * This method will delete a contact from the ContactList of ths user.
      *
-     * @param id        the id of the contact to delete
+     * @param email      the email of the contact to delete
      * @param principal the current user logged in
      */
     @Override
     @DeleteMapping("/deleteContact")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteContact(@RequestParam int id, Principal principal) {
+    public void deleteContact(@RequestParam String email, Principal principal) {
 
         if (principal.getName() == null) {
 //            return "plain-login";
         }
         String userEmail = principal.getName();
-        userService.deleteContact(id, userEmail);
+        userService.deleteContact(email, userEmail);
 
     }
 
@@ -72,19 +84,22 @@ public class ContactControllerImpl implements ContactController {
      * @return the collection of ContactDto
      */
     @Override
-    @GetMapping("/getContact")
+    @GetMapping("/home/getContact")
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public Collection<ContactDto> getContact(Principal principal) {
+    public String getContact(Principal principal, Model model) {
 
-        if (principal.getName() == null) {
+        if (principal == null || principal.getName() == null) {
             // TODO
-            throw new UnicornException("Je sais pas encore quoi mettre ici...");
+            log.error("Error - user not logged in.");
+            return "plain-login";
+
+
         }
         String userEmail = principal.getName();
 
-        Collection<ContactDto> collection = userService.getAllContact(userEmail);
+        Collection<ContactDto> contacts = userService.getAllContact(userEmail);
 
-        return collection;
+        model.addAttribute("contacts", contacts);
+        return "contact-page";
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -46,7 +45,7 @@ public class ContactControllerTest {
     private String lastNameTest = "lastName";
     private String createContactUrl = "/newContact";
     private String deleteContactUrl = "/deleteContact";
-    private String getContactUrl = "/getContact";
+    private String getContactUrl = "/home/getContact";
 
     @Test
     public void createNewContactValid() throws Exception {
@@ -60,7 +59,7 @@ public class ContactControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.post(createContactUrl)
                         .principal(principalMock)
-                        .param("contactEmail", emailTest))
+                        .param("email", emailTest))
 
                 .andExpect(
                         MockMvcResultMatchers.status().isCreated());
@@ -78,7 +77,7 @@ public class ContactControllerTest {
         // THEN
         mockMvc.perform(
                 MockMvcRequestBuilders.post(createContactUrl)
-                        .param("contactEmail", " ")
+                        .param("email", " ")
                         .principal(principalMock)
         )
                 .andExpect(
@@ -102,7 +101,7 @@ public class ContactControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.post(createContactUrl)
                         .principal(principalMock)
-                        .param("contactEmail", emailTest))
+                        .param("email", emailTest))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 
     }
@@ -120,7 +119,7 @@ public class ContactControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.post(createContactUrl)
                         .principal(principalMock)
-                        .param("contactEmail", emailTest))
+                        .param("email", emailTest))
                 .andExpect(
                         MockMvcResultMatchers.status().isConflict());
 
@@ -133,12 +132,12 @@ public class ContactControllerTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn("email");
-        Mockito.when(userServiceMock.deleteContact(Mockito.anyInt(), Mockito.anyString())).thenReturn(new ContactDto());
+        Mockito.when(userServiceMock.deleteContact(Mockito.anyString(), Mockito.anyString())).thenReturn(new ContactDto());
         // THEN
         mockMvc
                 .perform(
                         MockMvcRequestBuilders.delete(deleteContactUrl)
-                                .param("id", String.valueOf(idTest))
+                                .param("email", emailTest)
                                 .principal(principalMock))
                 .andExpect(MockMvcResultMatchers.status().isAccepted());
 
@@ -169,12 +168,12 @@ public class ContactControllerTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn("email");
-        Mockito.doThrow(DataNotFindException.class).when(userServiceMock).deleteContact(Mockito.anyInt(), Mockito.anyString());
+        Mockito.doThrow(DataNotFindException.class).when(userServiceMock).deleteContact(Mockito.anyString(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(
                         MockMvcRequestBuilders.delete(deleteContactUrl)
-                                .param("id", String.valueOf(idTest))
+                                .param("email", emailTest)
                                 .principal(principalMock))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -213,8 +212,7 @@ public class ContactControllerTest {
                 .perform(
                         MockMvcRequestBuilders.get(getContactUrl)
                                 .principal(principalMock))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 }

@@ -1,139 +1,106 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Pay my Buddy</title>
-  <!--    Bootstrap ref   -->
-  <link rel="stylesheet" href="style.css">
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Pay my Buddy</title>
+    <!--    Bootstrap ref   -->
+    <link rel="stylesheet" href="style.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="container emp-profile">
-  <form method="post">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="profile-head">
-          <h5>
-            <span th:text="${userModel.firstName}"/>
-            <span th:text="${userModel.lastName}"/>
-          </h5>
-          <h6>
-            Last connection: <span th:text="TODO"></span>
-          </h6>
-          <p class="profile-head">BALANCE : <span th:text="${userModel.balance}"></span></p>
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                 aria-controls="home" aria-selected="true">Home</a>
-            </li>
-            <li class="nav-item">
-              <a th:href="@{/home/transfert}" class="nav-link" id="profile-tab" data-toggle="tab"
-                 href="#profile" role="tab" aria-controls="profile" aria-selected="false">Transfer</a>
-            </li>
-            <li class="nav-item">
-              <a th:href="@{/home/profile}" class="nav-link" id="profile-tab" data-toggle="tab"
-                 href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a th:href="@{/home/contact}" class="nav-link" id="profile-tab" data-toggle="tab"
-                 href="#profile" role="tab" aria-controls="profile" aria-selected="false">Contact</a>
-            </li>
-            <li class="nav-item">
-              <a href="javascript: logoutForm.submit()" role="menuitem" class="nav-link">Sign out</a>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5>
+                        first_name last_name
+
+                    </h5>
+                    <h6>
+                        <!--                        Last connection: <span th:text="TODO"></span>-->
+                    </h6>
+                    <!--                    <p class="profile-head">BALANCE : <span th:text="${userModel.balance}"></span></p>-->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                               aria-controls="home" aria-selected="true">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/home/transfert}" class="nav-link" id="transfer-tab" data-toggle="tab"
+                               href="#profile" role="tab" aria-controls="profile" aria-selected="false">Transfer</a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/home/profile}" class="nav-link" id="profile-tab" data-toggle="tab"
+                               href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/home/contact}" class="nav-link active" id="contact-tab" data-toggle="tab"
+                               href="#profile" role="tab" aria-controls="profile" aria-selected="false">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript: logoutForm.submit()" role="menuitem" class="nav-link">Sign out</a>
 
 
-            </li>
+                        </li>
 
-          </ul>
-        </div>
-      </div>
-      <!--            <div class="col-md-2">-->
-      <!--                <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>-->
-      <!--            </div>-->
-    </div>
-    <div class="row">
-
-      <div class="col-md-4 col-md-offset-2 col-sm-6 col-sm-offset-2">
-        <div class="tab-content profile-tab" id="myTabContent">
-          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-
-            <div class="row">
-              <div class="col-md-6">
-                <label>First name</label>
-              </div>
-              <div class="col-md-6">
-                <p th:text="${userModel.firstName}"></p>
-              </div>
+                    </ul>
+                </div>
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Last name</label>
-              </div>
-              <div class="col-md-6">
-                <p th:text="${userModel.lastName}"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Balance</label>
-              </div>
-              <div class="col-md-6">
-                <p th:text="${userModel.balance}"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Email</label>
-              </div>
-              <div class="col-md-6">
-                <p th:text="${userModel.email}"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Phone</label>
-              </div>
-              <div class="col-md-6">
-                <p th:text="${userModel.phone}"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Address</label>
-              </div>
-              <div class="col-md-6">
-                <p th:text="${userModel.addressNumber}"></p>
-                <p th:text="${userModel.addressPrefix}"></p>
-                <p th:text="${userModel.addressStreet}"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>City</label>
-              </div>
-              <div class="col-md-6">
-                <p th:text="${userModel.city}"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Zip</label>
-              </div>
-              <div class="col-md-6">
-                <p th:text="${userModel.zip}"></p>
-              </div>
-            </div>
-          </div>
 
         </div>
-      </div>
-    </div>
-  </form>
+        <div class="row">
+
+            <div class="col-md-4 col-md-offset-2 col-sm-6 col-sm-offset-2">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="contact: ${contacts}">
+                                <td th:text="${contact.firstName}"/>
+                                <td th:text="${contact.email}"/>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--            form to add new contact             -->
+
+    </form>
+    <form th:action="@{/newContact}" method="POST" class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
+        <div class="input-group">
+            <input type="text" name="email" placeholder="example@mail.com" class="form-control">
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary btn-sm">ADD Buddy</button>
+        </div>
+    </form>
+    <!--            form to delete contact             -->
+    <form th:action="@{/deleteContact}" th:method="DELETE" class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
+        <div class="input-group">
+            <input type="text" name="email" placeholder="example@mail.com" class="form-control">
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary btn-sm">DELETE Buddy</button>
+        </div>
+    </form>
 </div>
 <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-  <input hidden type="submit" value="Sign Out"/>
+    <input hidden type="submit" value="Sign Out"/>
 </form>
 
 </body>
