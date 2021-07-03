@@ -12,7 +12,6 @@ public class UserDetailsImpl implements UserDetails {
 
     private final String userName;
     private final String password;
-    private boolean active;
     private final SimpleGrantedAuthority authority =
             new SimpleGrantedAuthority("ROLE_USER");
 

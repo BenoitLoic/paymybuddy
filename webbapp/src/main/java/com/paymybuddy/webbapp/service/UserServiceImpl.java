@@ -150,12 +150,12 @@ public class UserServiceImpl implements UserService {
 
         // check if contact already exist in userContactList
         User user = userRepository.findByEmail(userEmail).get();
-        if (user.getContactList().contains(contact)) {
+        if (user.getContacts().contains(contact)) {
             throw new DataAlreadyExistException("KO - This contact is already linked, contact: " + contactEmail);
         }
 
         // save and return firstName and lastName of contact
-        user.getContactList().add(contact);
+        user.getContacts().add(contact);
         userRepository.save(user);
 
         return contact.getFirstName() + " " + contact.getLastName();
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
         ContactDto contactDto = new ContactDto();
 
         // check if contact is present in contactList
-        Set<User> contactList = user.getContactList();
+        Set<User> contactList = user.getContacts();
         User userToDelete = new User();
         boolean deleted = false;
         for (User contact : contactList) {
@@ -195,7 +195,6 @@ public class UserServiceImpl implements UserService {
             throw new DataNotFindException("Error - can't find user with email: " + email);
         }
         contactList.remove(userToDelete);
-        System.out.println("deleted : " + deleted + " dto: " + contactDto);
         //  save
         userRepository.save(user);
         return contactDto;
@@ -219,7 +218,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // Get contact List
-        Set<User> contactList = user.getContactList();
+        Set<User> contactList = user.getContacts();
 
         // Map every contact to its ContactDto
         Collection<ContactDto> dtoCollection = new ArrayList<>();

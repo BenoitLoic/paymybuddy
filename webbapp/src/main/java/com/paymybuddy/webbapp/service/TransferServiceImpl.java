@@ -2,12 +2,14 @@ package com.paymybuddy.webbapp.service;
 
 import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.exception.DataNotFindException;
+import com.paymybuddy.webbapp.exception.IllegalArgumentException;
 import com.paymybuddy.webbapp.exception.UnicornException;
 import com.paymybuddy.webbapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 public class TransferServiceImpl implements TransferService {
 
     @Autowired

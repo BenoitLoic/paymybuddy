@@ -131,6 +131,26 @@
             </div>
         </div>
     </form>
+    <!--            form to add money             -->
+    <form th:action="@{/balance/add}" method="POST" class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
+        <div class="input-group">
+            <input type="text" name="amount" placeholder="ex: 100" class="form-control">
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary btn-sm">ADD Money</button>
+        </div>
+    </form>
+    <!--            form to remove money             -->
+    <form th:action="@{/balance/remove}" method="POST" class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
+        <div class="input-group">
+            <input type="text" name="amount" placeholder="ex: 100" class="form-control">
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary btn-sm">Remove Money</button>
+        </div>
+    </form>
 </div>
 <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
     <input hidden type="submit" value="Sign Out"/>

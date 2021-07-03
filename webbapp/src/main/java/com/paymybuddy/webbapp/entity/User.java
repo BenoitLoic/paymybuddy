@@ -60,14 +60,25 @@ public class User {
     @JoinTable(name = "contact",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "contact_id"))
-    private final Set<User> contactList = new HashSet<>();
+    private final Set<User> contacts = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "contact",
             joinColumns = @JoinColumn(name = "contact_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private final Set<User> asContactOfList = new HashSet<>();
+    private final Set<User> asContacts = new HashSet<>();
 
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "transaction",
+//            joinColumns = @JoinColumn(name = "user_debtor_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_creditor_id"))
+//    private final Set<Transfer> transfersAsDebtor = new HashSet<>();
+//
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "transaction",
+//            joinColumns = @JoinColumn(name = "user_creditor_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_debtor_id"))
+//    private final Set<Transfer> transfersAsCreditor = new HashSet<>();
 
     public User() {
     }
@@ -175,12 +186,12 @@ public class User {
         this.city = city;
     }
 
-    public Set<User> getContactList() {
-        return contactList;
+    public Set<User> getContacts() {
+        return contacts;
     }
 
-    public Set<User> getAsContactOfList() {
-        return asContactOfList;
+    public Set<User> getAsContacts() {
+        return asContacts;
     }
 
     @Override

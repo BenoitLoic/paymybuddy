@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -20,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -63,7 +64,7 @@ class UserServiceTest {
         userService.save(user);
 //        THEN
 
-        Mockito.verify(userRepositoryMock, Mockito.times(1)).save(user);
+        verify(userRepositoryMock, times(1)).save(user);
     }
 
 
@@ -79,13 +80,13 @@ class UserServiceTest {
         User user = new User();
 
         // WHEN
-        Mockito.when(userRepositoryMock.existsById(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(userRepositoryMock.getById(Mockito.anyInt())).thenReturn(user);
+        when(userRepositoryMock.existsById(anyInt())).thenReturn(true);
+        when(userRepositoryMock.getById(anyInt())).thenReturn(user);
         userService.update(userToUpdate);
         // THEN
 
-        Mockito.verify(userRepositoryMock, Mockito.times(1)).save(Mockito.any());
-        Mockito.verify(userRepositoryMock, Mockito.times(1)).existsById(Mockito.anyInt());
+        verify(userRepositoryMock, times(1)).save(any());
+        verify(userRepositoryMock, times(1)).existsById(anyInt());
 
 
     }
@@ -101,7 +102,7 @@ class UserServiceTest {
 
 
         // WHEN
-        Mockito.when(userRepositoryMock.existsById(Mockito.anyInt())).thenReturn(false);
+        when(userRepositoryMock.existsById(anyInt())).thenReturn(false);
         // THEN
         Assertions.assertThrows(DataNotFindException.class, () -> userService.update(userToUpdate));
 
@@ -115,12 +116,12 @@ class UserServiceTest {
         int validUserId = 598743;
 
         // WHEN
-        Mockito.when(userRepositoryMock.existsById(Mockito.anyInt())).thenReturn(true);
+        when(userRepositoryMock.existsById(anyInt())).thenReturn(true);
         userService.deleteUserById(validUserId);
         // THEN
 
-        Mockito.verify(userRepositoryMock, Mockito.times(1)).deleteById(validUserId);
-        Mockito.verify(userRepositoryMock, Mockito.times(1)).existsById(validUserId);
+        verify(userRepositoryMock, times(1)).deleteById(validUserId);
+        verify(userRepositoryMock, times(1)).existsById(validUserId);
 
 
     }
@@ -132,7 +133,7 @@ class UserServiceTest {
         int validUserId = 598743;
 
         // WHEN
-        Mockito.when(userRepositoryMock.existsById(Mockito.anyInt())).thenReturn(false);
+        when(userRepositoryMock.existsById(anyInt())).thenReturn(false);
         // THEN
         Assertions.assertThrows(DataNotFindException.class, () -> userService.deleteUserById(validUserId));
 
@@ -151,7 +152,8 @@ class UserServiceTest {
         Optional<User> userAccount = Optional.of(user2);
 
         // WHEN
-        Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(userToAdd, userAccount);
+        when(userRepositoryMock.findByEmail(email)).thenReturn(userToAdd);
+        when(userRepositoryMock.findByEmail(email+1)).thenReturn(userAccount);
 
         String returnString = userService.addNewContact(email, email + 1);
         // THEN
@@ -168,10 +170,12 @@ class UserServiceTest {
         Optional<User> userAccount = Optional.of(user2);
 
         // WHEN
-        Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(userToAdd, userAccount);
+        when(userRepositoryMock.findByEmail(email)).thenReturn(userToAdd);
+
 
         // THEN
         Assertions.assertThrows(DataNotFindException.class, () -> userService.addNewContact(email, email + 1));
+
     }
 
     @Test
@@ -183,11 +187,12 @@ class UserServiceTest {
         Optional<User> userToAdd = Optional.of(user1);
         User user2 = new User(email + 1, lastName, firstName, password);
         user2.setId(2);
-        user2.getContactList().add(user1);
+        user2.getContacts().add(user1);
         Optional<User> userAccount = Optional.of(user2);
 
         // WHEN
-        Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(userToAdd, userAccount);
+        when(userRepositoryMock.findByEmail(email)).thenReturn(userToAdd);
+        when(userRepositoryMock.findByEmail(email+1)).thenReturn(userAccount);
 
 
         // THEN
@@ -201,10 +206,10 @@ class UserServiceTest {
         User user = new User("userEmail", "userLastName", "userFirstName", "test");
         User contact = new User(email, lastName, firstName, password);
         contact.setId(id);
-        user.getContactList().add(contact);
+        user.getContacts().add(contact);
         ContactDto expectedDto = new ContactDto(firstName, lastName, email);
         // WHEN
-        Mockito.when(userRepositoryMock.findByEmail("userEmail")).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByEmail("userEmail")).thenReturn(Optional.of(user));
 
 
         ContactDto actualDto = userService.deleteContact(email, "userEmail");
@@ -223,7 +228,7 @@ class UserServiceTest {
 
 
         // WHEN
-        Mockito.when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
 
 
         // THEN
@@ -238,13 +243,13 @@ class UserServiceTest {
         User user = new User(email, lastName, firstName, password);
         User userContact1 = new User(email + 1, lastName + 1, firstName + 1, password + 1);
         User userContact2 = new User(email + 2, lastName + 2, firstName + 2, password + 2);
-        user.getContactList().add(userContact1);
-        user.getContactList().add(userContact2);
+        user.getContacts().add(userContact1);
+        user.getContacts().add(userContact2);
 
         ContactDto contactDto1 = new ContactDto(firstName + 1, lastName + 1, email + 1);
         ContactDto contactDto2 = new ContactDto(firstName + 2, lastName + 2, email + 2);
         // WHEN
-        Mockito.when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
         Collection<ContactDto> expected = Arrays.asList(contactDto1, contactDto2);
         Collection<ContactDto> actual = userService.getAllContact(email);
 
@@ -261,7 +266,7 @@ class UserServiceTest {
         User user = new User(email, lastName, firstName, password);
 
         // WHEN
-        Mockito.when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(user));
         Collection<ContactDto> expected = new ArrayList<>();
         Collection<ContactDto> actual = userService.getAllContact(email);
 
