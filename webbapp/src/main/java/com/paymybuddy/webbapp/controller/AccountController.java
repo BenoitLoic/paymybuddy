@@ -19,8 +19,6 @@ import java.security.Principal;
 public class AccountController {
 
 
-//TODO ajouter /home/** en .authenticated()
-
 
     @Autowired
     UserService userService;

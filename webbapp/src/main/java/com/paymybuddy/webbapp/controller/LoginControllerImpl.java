@@ -1,13 +1,14 @@
 package com.paymybuddy.webbapp.controller;
 
+import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -31,15 +32,16 @@ public class LoginControllerImpl implements LoginController {
     }
 
 
-    @PostMapping("/test")
+    @GetMapping("/test")
     @ResponseBody
-    public void testUserAccount(@RequestParam String contactEmail) {
+    public void testUserAccount() {
 
-        String userEmail = "loic@mail.com";
+        Optional<User> id = userService.findById(1);
+        User user = id.get();
 
-        // vérif que les valeurs e sont pas null
+        System.out.println(user.getTransfersAsDebtor());
+        System.out.println(user.getTransfersAsCreditor());
 
-        // appel du service
 
     }
 }

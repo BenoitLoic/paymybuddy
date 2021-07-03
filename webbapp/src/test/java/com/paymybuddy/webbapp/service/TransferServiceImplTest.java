@@ -1,7 +1,13 @@
 package com.paymybuddy.webbapp.service;
 
+import com.paymybuddy.webbapp.dao.TransferDao;
+import com.paymybuddy.webbapp.dto.GetTransferDto;
+import com.paymybuddy.webbapp.dto.NewTransferDto;
 import com.paymybuddy.webbapp.entity.User;
+import com.paymybuddy.webbapp.exception.BadArgumentException;
+import com.paymybuddy.webbapp.exception.IllegalContactException;
 import com.paymybuddy.webbapp.exception.UnicornException;
+import com.paymybuddy.webbapp.repository.TransferRepository;
 import com.paymybuddy.webbapp.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +25,10 @@ class TransferServiceImplTest {
 
     @Mock
     UserRepository userRepositoryMock;
+    @Mock
+    TransferRepository transferRepositoryMock;
+    @Mock
+    TransferDao transferDaoMock;
 
     @InjectMocks
     TransferServiceImpl transferService;
@@ -26,6 +36,9 @@ class TransferServiceImplTest {
     private int amount = 50;
     private int balance = 100;
     private String userEmail = "testEmail";
+    private String debtor = "debtorTest";
+    private String creditor = "creditorTest";
+    private String descriptionTest = "Test0018574685";
     private User user;
 
     @BeforeEach
@@ -66,7 +79,7 @@ class TransferServiceImplTest {
 
         // THEN
         //  verif que l'exception est bien lancée
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> transferService.addCash(0, userEmail));
+        org.junit.jupiter.api.Assertions.assertThrows(BadArgumentException.class, () -> transferService.addCash(0, userEmail));
 
     }
 
@@ -147,5 +160,87 @@ class TransferServiceImplTest {
         //vérif qu'on jette bien l'exception
         org.junit.jupiter.api.Assertions.assertThrows(UnicornException.class, () -> transferService.removeCash(amount, userEmail));
 
+    }
+
+    // quand tout est OK
+    @Test
+    public void createTransferValid() {
+
+        // GIVEN
+        NewTransferDto newTransfer = new NewTransferDto();
+        newTransfer.setDebtorEmail(debtor);
+        newTransfer.setCreditorEmail(creditor);
+        newTransfer.setAmount(amount);
+        newTransfer.setDescription(descriptionTest);
+
+        User user = new User(debtor, "lastNameUser","firstNameUser", "pass");
+        user.setBalance(balance);
+        user.setId(1);
+        User contact = new User(creditor, "lastNameContact","firstNameContact", "pass");
+        contact.setBalance(balance);
+//        contact.setId(2);
+        user.getContacts().add(contact);
+
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(debtor)).thenReturn(Optional.of(user));
+
+        //GetTransferDto(String contactName, String description, int amount)
+        GetTransferDto expected = new GetTransferDto(contact.getFirstName(), descriptionTest, amount);
+        GetTransferDto actual = transferService.createTransfer(newTransfer);
+
+        // THEN
+        Assertions.assertThat(user.getBalance()).isEqualTo(balance-amount);
+        Assertions.assertThat(contact.getBalance()).isEqualTo(balance+amount);
+        Mockito.verify(transferDaoMock,Mockito.times(1)).saveNewTransfer(Mockito.any(),Mockito.any(),Mockito.any());
+
+    }
+
+    // when contactEmail is not part of user's contacts
+    @Test
+    void createTransferWhenCreditorIsNotAContact_ShouldThrowIllegalContactException() {
+
+        // GIVEN
+        NewTransferDto newTransfer = new NewTransferDto();
+        newTransfer.setDebtorEmail(debtor);
+        newTransfer.setCreditorEmail(creditor);
+        newTransfer.setAmount(amount);
+        newTransfer.setDescription(descriptionTest);
+
+        User user = new User(debtor, "lastNameUser","firstNameUser", "pass");
+        user.setBalance(balance);
+        User contact = new User(creditor, "lastNameContact","firstNameContact", "pass");
+
+
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(debtor)).thenReturn(Optional.of(user));
+        //GetTransferDto(String contactName, String description, int amount)
+
+        // THEN
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalContactException.class, ()-> transferService.createTransfer(newTransfer));
+
+    }
+
+    // when debtor have not enough money
+    @Test
+    void createTransferWhenAmountIsOverDebtorBalance_ShouldThrowException() {
+
+        // GIVEN
+        NewTransferDto newTransfer = new NewTransferDto();
+        newTransfer.setDebtorEmail(debtor);
+        newTransfer.setCreditorEmail(creditor);
+        newTransfer.setAmount(balance+500);
+        newTransfer.setDescription(descriptionTest);
+
+        User user = new User(debtor, "lastNameUser","firstNameUser", "pass");
+        user.setBalance(balance);
+        User contact = new User(creditor, "lastNameContact","firstNameContact", "pass");
+        user.getContacts().add(contact);
+
+        // WHEN
+        Mockito.when(userRepositoryMock.findByEmail(debtor)).thenReturn(Optional.of(user));
+        //GetTransferDto(String contactName, String description, int amount)
+
+        // THEN
+        org.junit.jupiter.api.Assertions.assertThrows(UnicornException.class, ()-> transferService.createTransfer(newTransfer));
     }
 }

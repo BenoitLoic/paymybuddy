@@ -1,12 +1,15 @@
 package com.paymybuddy.webbapp.service;
 
-import org.springframework.stereotype.Service;
+import com.paymybuddy.webbapp.dto.GetTransferDto;
+import com.paymybuddy.webbapp.dto.NewTransferDto;
+
+import java.util.List;
 
 /**
  * Interface for transfer service.
  * Contain some method to add/remove currency from user balance.
  */
-@Service
+
 public interface TransferService {
     /**
      * This method will add some cash to User balance.
@@ -25,6 +28,21 @@ public interface TransferService {
      * @return true if success
      */
     boolean removeCash(int amount, String email);
+
+    /**
+     * This method will create a new Transfer between two user
+     *
+     * @param newTransferDto dto with creditorEmail, debtorEmail, amount and description
+     */
+    GetTransferDto createTransfer(NewTransferDto newTransferDto);
+
+
+    /**
+     * This method will get all transfer for the given user
+     *
+     * @param userEmail the email of the current user.
+     */
+    List<GetTransferDto> getTransfers(String userEmail);
 
 
 }

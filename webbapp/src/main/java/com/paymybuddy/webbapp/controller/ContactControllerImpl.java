@@ -89,7 +89,7 @@ public class ContactControllerImpl implements ContactController {
     public String getContact(Principal principal, Model model) {
 
         if (principal == null || principal.getName() == null) {
-            // TODO
+
             log.error("Error - user not logged in.");
             return "plain-login";
 
