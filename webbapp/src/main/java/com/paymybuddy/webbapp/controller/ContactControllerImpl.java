@@ -2,6 +2,7 @@ package com.paymybuddy.webbapp.controller;
 
 import com.paymybuddy.webbapp.dto.ContactDto;
 import com.paymybuddy.webbapp.exception.UnicornException;
+import com.paymybuddy.webbapp.exception.UserNotAuthenticatedException;
 import com.paymybuddy.webbapp.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,6 @@ public class ContactControllerImpl implements ContactController {
     }
 
 
-    @GetMapping("/newContactPage")
-    public String newContactForm() {
-        return "newcontact-page";
-    }
-
     /**
      * This method add a new contact to a user ContactList with the email of its future contact
      *
@@ -54,14 +50,14 @@ public class ContactControllerImpl implements ContactController {
 
         System.out.println(email);
         userService.addNewContact(email, userEmail);
-        return "redirect://home/getContact";
+        return "redirect://home/contact";
 
     }
 
     /**
      * This method will delete a contact from the ContactList of ths user.
      *
-     * @param email      the email of the contact to delete
+     * @param email     the email of the contact to delete
      * @param principal the current user logged in
      */
     @Override
@@ -70,7 +66,7 @@ public class ContactControllerImpl implements ContactController {
     public void deleteContact(@RequestParam String email, Principal principal) {
 
         if (principal.getName() == null) {
-//            return "plain-login";
+            throw new UserNotAuthenticatedException("Error - User not authenticated.");
         }
         String userEmail = principal.getName();
         userService.deleteContact(email, userEmail);
@@ -84,7 +80,7 @@ public class ContactControllerImpl implements ContactController {
      * @return the collection of ContactDto
      */
     @Override
-    @GetMapping("/home/getContact")
+    @GetMapping("/home/contact")
     @ResponseStatus(HttpStatus.OK)
     public String getContact(Principal principal, Model model) {
 

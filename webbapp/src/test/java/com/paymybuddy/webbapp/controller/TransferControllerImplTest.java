@@ -21,11 +21,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.security.Principal;
+import java.util.Objects;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(controllers = TransferControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class TransferControllerImplTest {
 
@@ -39,10 +40,10 @@ public class TransferControllerImplTest {
     @Mock
     Principal principalMock;
 
-    private final String addCashUrl = "/balance/add";
-    private final String removeCashUrl = "/balance/remove";
-    private final String createTransferUrl = "/transfer";
-    private final String getTransferUrl = "/transfer";
+    private final String addCashUrl = "/home/balance/add";
+    private final String removeCashUrl = "/home/balance/remove";
+    private final String createTransferUrl = "/home/transfer";
+    private final String getTransferUrl = "/home/transfer";
     private final String debtorTest = "John";
     private final String creditorTest = "Doe";
     private final String descriptionTest = "test payment";
@@ -63,7 +64,7 @@ public class TransferControllerImplTest {
 
         mockMvc
                 .perform(
-                        post("/balance/add?amount=" + amount)
+                        post(addCashUrl+"?amount=" + amount)
                                 .principal(principalMock)
                 )
                 .andExpect(status().isAccepted());
@@ -82,7 +83,7 @@ public class TransferControllerImplTest {
 
         mockMvc
                 .perform(
-                        post("/balance/add?amount=" + 0.1)
+                        post(addCashUrl+"?amount=" + 0.1)
                                 .principal(principalMock))
                 .andExpect(status().isBadRequest());
 
@@ -104,7 +105,7 @@ public class TransferControllerImplTest {
 
         mockMvc
                 .perform(
-                        post("/balance/add?amount=" + 0)
+                        post(addCashUrl+"?amount=" + 0)
                                 .principal(principalMock))
 
                 .andExpect(status().isBadRequest());
@@ -127,7 +128,7 @@ public class TransferControllerImplTest {
 
         mockMvc
                 .perform(
-                        post("/balance/add?amount=" + 50)
+                        post(addCashUrl+"?amount=" + 50)
                                 .principal(principalMock))
                 .andExpect(status().isBadRequest());
     }
@@ -143,7 +144,7 @@ public class TransferControllerImplTest {
         // THEN
         mockMvc
                 .perform(
-                        post("/balance/remove?amount=" + amount)
+                        post(removeCashUrl+"?amount=" + amount)
                                 .principal(principalMock))
                 .andExpect(status().isAccepted());
 
@@ -160,7 +161,7 @@ public class TransferControllerImplTest {
         // THEN
         mockMvc
                 .perform(
-                        post("/balance/add?amount=" + 0.1)
+                        post(removeCashUrl+"?amount="  + 0.1)
                                 .principal(principalMock))
                 .andExpect(status().isBadRequest());
 
@@ -174,11 +175,11 @@ public class TransferControllerImplTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.doThrow(UnicornException.class).when(transferServiceMock).addCash(Mockito.anyInt(), Mockito.anyString());
+        Mockito.doThrow(UnicornException.class).when(transferServiceMock).removeCash(Mockito.anyInt(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(
-                        post("/balance/add?amount=" + amount)
+                        post(removeCashUrl+"?amount=" + amount)
                                 .principal(principalMock))
                 .andExpect(status().isBadRequest());
 
@@ -192,7 +193,7 @@ public class TransferControllerImplTest {
         NewTransferDto transferDto = new NewTransferDto(creditorTest, amount, descriptionTest);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(transferDto);
-
+        System.out.println(json);
 
 
         // WHEN
@@ -205,6 +206,7 @@ public class TransferControllerImplTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json))
                 .andExpect(status().isCreated());
+        System.out.println(json);
     }
 
     @Test
@@ -274,7 +276,7 @@ public class TransferControllerImplTest {
                 .andExpect(
                         mvcResult -> Assertions.assertEquals(
                                 "KO - User must be authenticated",
-                                mvcResult.getResolvedException().getMessage()));
+                                Objects.requireNonNull(mvcResult.getResolvedException()).getMessage()));
 
     }
 

@@ -1,7 +1,6 @@
 package com.paymybuddy.webbapp.controller;
 
 
-import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +12,18 @@ import java.util.List;
 
 @EnableWebSecurity
 @RestController
-@RequestMapping("/V1")
+@RequestMapping("/home")
 public class UserControllerImpl implements UserController {
 
     @Autowired
     private UserService userService;
 
 
+    /**
+     * This method will delete an user account.
+     * @param id the id of the user to delete.
+     * @return confirmation message.
+     */
     @Override
     @DeleteMapping("/user")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -30,6 +34,12 @@ public class UserControllerImpl implements UserController {
         return "Account for id: " + id + " deleted.";
     }
 
+
+    /**
+     * This method will update the account of the given user.
+     * @param theUser the user to update.
+     * @return confirmation message
+     */
     @Override
     @PutMapping("/user")
     @ResponseStatus(HttpStatus.CREATED)
@@ -40,9 +50,14 @@ public class UserControllerImpl implements UserController {
         return "user: " + theUser.getEmail() + " updated.";
     }
 
+
+    /**
+     * This method will return a list of all the user account in data base.
+     * @return the list of users
+     */
     @Override
     @GetMapping("/users")
-    public List<User> findAll() {
+    public List<UserModel> findAll() {
         return userService.findAll();
     }
 

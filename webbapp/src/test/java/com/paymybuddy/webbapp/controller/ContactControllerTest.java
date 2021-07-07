@@ -39,13 +39,13 @@ public class ContactControllerTest {
     @InjectMocks
     ContactControllerImpl contactController;
 
-    private int idTest = 5;
-    private String emailTest = "test@mail.com";
-    private String firstNameTest = "firstName";
-    private String lastNameTest = "lastName";
-    private String createContactUrl = "/newContact";
-    private String deleteContactUrl = "/deleteContact";
-    private String getContactUrl = "/home/getContact";
+    private final int idTest = 5;
+    private final String emailTest = "test@mail.com";
+    private final String firstNameTest = "firstName";
+    private final String lastNameTest = "lastName";
+    private final String createContactUrl = "/newContact";
+    private final String deleteContactUrl = "/deleteContact";
+    private final String getContactUrl = "/home/contact";
 
     @Test
     public void createNewContactValid() throws Exception {

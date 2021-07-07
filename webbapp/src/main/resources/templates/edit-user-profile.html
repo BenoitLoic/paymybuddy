@@ -1,27 +1,62 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-
-    <title>Edit Profile</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <title>Pay my Buddy</title>
+    <!--    Bootstrap ref   -->
+    <link rel="stylesheet" href="style.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+<div class="container emp-profile">
+    <form method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5>
+                        first_name last_name
 
-<div id="registerBox" style="margin-top: 50px;" class="mainContainer col-md-3 col-md-offset-2 col-sm-6 col-sm-offset-2">
-    <div class="panel-primary">
-        <!--    titre du formulaire-->
-        <div style="margin-bottom: 20px; background-color: seagreen" class="panel-heading">
-            <div class="panel-title">Edit your personal information.</div>
+                    </h5>
+                    <h6>
+                        <!--                        Last connection: <span th:text="TODO"></span>-->
+                    </h6>
+                    <!--                    <p class="profile-head">BALANCE : <span th:text="${userModel.balance}"></span></p>-->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a th:href="@{/home}" class="nav-link" id="home-tab" data-toggle="tab" role="tab"
+                               aria-controls="home" aria-selected="true">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/home/transfer}" class="nav-link" id="transfer-tab" data-toggle="tab"
+                               href="#transfer-tab" role="tab" aria-controls="profile"
+                               aria-selected="false">Transfer</a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/home/profile}" class="nav-link active" id="profile-tab" data-toggle="tab"
+                               href="#profile-tab" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/home/contact}" class="nav-link" id="contact-tab" data-toggle="tab"
+                               href="#contact-tab" role="tab" aria-controls="profile" aria-selected="false">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript: logoutForm.submit()" role="menuitem" class="nav-link">Sign out</a>
+
+
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
         </div>
+
+
+
+    </form>
         <form th:action="@{/test}" th:object="${theUser}" th:method="PUT" class="form-horizontal">
 
             <!-- place ofr message: error, alert -->
@@ -29,22 +64,22 @@
 
             <!--    id   -->
             <div style="margin-bottom: 20px" th:hidden="true" class="input-group">
-                <input type="hidden" name="id" th:value="${userModel.id}" class="form-control"/>
+                <input type="hidden" name="id" th:value="${theUser.id}" class="form-control"/>
             </div>
             <!--    firstName   -->
             <div style="margin-bottom: 20px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input type="text" name="firstName" th:placeholder="${userModel.firstName}" class="form-control"/>
+                <input type="text" name="firstName" th:placeholder="${theUser.firstName}" class="form-control"/>
             </div>
             <!--    lastName    -->
             <div style="margin-bottom: 20px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input type="text" name="lastName" th:placeholder="${userModel.lastName}" class="form-control"/>
+                <input type="text" name="lastName" th:placeholder="${theUser.lastName}" class="form-control"/>
             </div>
             <!--    email   -->
             <div style="margin-bottom: 20px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                <input type="text" name="email" th:placeholder="${userModel.email}" class="form-control"/>
+                <input type="text" name="email" th:placeholder="${theUser.email}" class="form-control"/>
             </div>
             <!--    password    -->
             <div style="margin-bottom: 20px" class="input-group">
@@ -60,38 +95,38 @@
             <div style="margin-bottom: 20px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
 
-                <input type="text" name="phone" th:placeholder="${userModel.phone}" class="form-control"/>
+                <input type="text" name="phone" th:placeholder="${theUser.phone}" class="form-control"/>
             </div>
             <!--    address prefix  -->
             <div style="margin-bottom: 20px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
 
-                <input type="text" name="addressPrefix" th:placeholder="${userModel.addressPrefix}"
+                <input type="text" name="addressPrefix" th:placeholder="${theUser.addressPrefix}"
                        class="form-control"/>
             </div>
             <!--    address number  -->
             <div style="margin-bottom: 20px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
 
-                <input type="text" name="addressNumber" th:placeholder="${userModel.addressNumber}"
+                <input type="text" name="addressNumber" th:placeholder="${theUser.addressNumber}"
                        class="form-control"/>
             </div>
             <!--    address street  -->
             <div style="margin-bottom: 20px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
 
-                <input type="text" name="addressStreet" th:placeholder="${userModel.addressStreet}"
+                <input type="text" name="addressStreet" th:placeholder="${theUser.addressStreet}"
                        class="form-control"/>
             </div>
             <!--    zip -->
             <div style="margin-bottom: 20px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                <input type="text" name="zip" th:placeholder="${userModel.zip}" class="form-control"/>
+                <input type="text" name="zip" th:placeholder="${theUser.zip}" class="form-control"/>
             </div>
             <!--    city    -->
             <div style="margin-bottom: 25px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                <input type="text" name="city" th:placeholder="${userModel.city}" class="form-control"/>
+                <input type="text" name="city" th:placeholder="${theUser.city}" class="form-control"/>
             </div>
 
 
@@ -100,11 +135,13 @@
             </div>
         </form>
     </div>
-</div>
+
 <form th:action="@{/V1/user}"  th:method="delete"  class="form-horizontal">
-  <input type="hidden"  name="id" th:value="${userModel.id}" class="form-control"/>
+  <input type="hidden"  name="id" th:value="${theUser.id}" class="form-control"/>
     <button type="submit"  class="btn btn-danger">Delete Account</button>
 </form>
-
+<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+    <input hidden type="submit" value="Sign Out"/>
+</form>
 </body>
 </html>

@@ -9,7 +9,6 @@ import java.util.List;
  * Interface for transfer service.
  * Contain some method to add/remove currency from user balance.
  */
-
 public interface TransferService {
     /**
      * This method will add some cash to User balance.

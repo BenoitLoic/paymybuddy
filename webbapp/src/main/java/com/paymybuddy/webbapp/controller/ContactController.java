@@ -10,6 +10,8 @@ import java.security.Principal;
  * Contains method to add and delete a contact from a user account.
  */
 public interface ContactController {
+
+
     /**
      * This method add a new contact to a user ContactList with the email of its future contact
      *
@@ -17,6 +19,7 @@ public interface ContactController {
      * //@param principal current user logged in
      */
     String addContact(String email,Principal principal);
+
 
     /**
      * This method will delete a contact from the ContactList of ths user.

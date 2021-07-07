@@ -7,15 +7,16 @@ import com.paymybuddy.webbapp.service.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @Controller
+@RequestMapping("/home")
 public class TransferControllerImpl implements TransferController {
 
     @Autowired
@@ -81,13 +82,13 @@ public class TransferControllerImpl implements TransferController {
      *
      * @param newTransfer Dto with creditorEmail, amount, description
      * @param principal   the current user (debtor)
-     * @return
+     * @return previous page
      */
     @Override
-    @PostMapping("/home/transfer")
+    @PostMapping("/transfer")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public GetTransferDto createTransfer(@Valid  NewTransferDto newTransfer, Principal principal) {
+    public RedirectView createTransfer(@Valid @RequestBody NewTransferDto newTransfer, Principal principal) {
 
 //        if (bindingResult.hasErrors()){
 //            throw new BadArgumentException("KO - error detected within form");
@@ -100,10 +101,10 @@ public class TransferControllerImpl implements TransferController {
         // add principal to dto
         newTransfer.setDebtorEmail(principal.getName());
         // call service
-
+        transferService.createTransfer(newTransfer);
         // redirect to getTransfer page
 
-        return transferService.createTransfer(newTransfer);
+        return new RedirectView("/home/transfer");
     }
 
     /**
@@ -113,9 +114,12 @@ public class TransferControllerImpl implements TransferController {
      * @return the view for transfer
      */
     @Override
-    @GetMapping("/home/transfer")
-    @ResponseBody
-    public List<GetTransferDto>getTransfers(Principal principal) {
-        return transferService.getTransfers(principal.getName());
+    @GetMapping("/transfer")
+    public String getTransfers(Model model, Principal principal) {
+
+        List<GetTransferDto> transfers = transferService.getTransfers(principal.getName());
+        model.addAttribute("transfers", transfers);
+        return "transfer-page";
     }
+
 }

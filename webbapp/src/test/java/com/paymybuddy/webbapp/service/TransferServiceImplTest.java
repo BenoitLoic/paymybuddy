@@ -35,10 +35,10 @@ class TransferServiceImplTest {
 
     private int amount = 50;
     private int balance = 100;
-    private String userEmail = "testEmail";
-    private String debtor = "debtorTest";
-    private String creditor = "creditorTest";
-    private String descriptionTest = "Test0018574685";
+    private final String userEmail = "testEmail";
+    private final String debtor = "debtorTest";
+    private final String creditor = "creditorTest";
+    private final String descriptionTest = "Test0018574685";
     private User user;
 
     @BeforeEach

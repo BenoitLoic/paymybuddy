@@ -29,7 +29,7 @@
                                aria-controls="home" aria-selected="true">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a th:href="@{/home/transfert}" class="nav-link" id="transfer-tab" data-toggle="tab"
+                            <a th:href="@{/home/transfer}" class="nav-link" id="transfer-tab" data-toggle="tab"
                                href="#transfer-tab" role="tab" aria-controls="profile" aria-selected="false">Transfer</a>
                         </li>
                         <li class="nav-item">
@@ -66,8 +66,8 @@
                             </thead>
                             <tbody>
                             <tr th:each="contact: ${contacts}">
-                                <td th:text="${contact.firstName}"/>
-                                <td th:text="${contact.email}"/>
+                                <td th:text="${contact.firstName}"></td>
+                                <td th:text="${contact.email}"></td>
                             </tr>
                             </tbody>
                         </table>

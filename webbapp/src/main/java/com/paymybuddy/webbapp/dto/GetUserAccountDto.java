@@ -1,9 +1,6 @@
-package com.paymybuddy.webbapp.model;
+package com.paymybuddy.webbapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class UserModel {
+public class GetUserAccountDto {
 
 
     private int id;
@@ -13,8 +10,6 @@ public class UserModel {
     private String lastName;
 
     private String firstName;
-
-    private String password;
 
     private int balance;
 
@@ -30,8 +25,6 @@ public class UserModel {
 
     private String city;
 
-    public UserModel() {
-    }
 
     public int getId() {
         return id;
@@ -63,14 +56,6 @@ public class UserModel {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public int getBalance() {
@@ -131,12 +116,11 @@ public class UserModel {
 
     @Override
     public String toString() {
-        return "UserModel{" +
+        return "GetUserAccountDto{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
-                ", password='" + password + '\'' +
                 ", balance=" + balance +
                 ", phone='" + phone + '\'' +
                 ", addressPrefix='" + addressPrefix + '\'' +

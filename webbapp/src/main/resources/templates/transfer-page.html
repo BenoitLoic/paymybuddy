@@ -67,9 +67,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="contact: ${contacts}">
-                                <td th:text="${contact.firstName}"/>
-                                <td th:text="${contact.email}"/>
+                            <tr th:each="transfer: ${transfers}">
+                                <td th:text="${transfer.contactName}"></td>
+                                <td th:text="${transfer.description}"></td>
+                                <td th:text="${transfer.amount}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -83,6 +84,7 @@
     </form>
 
     <!--            form to create new transfer             -->
+    <!--/*@thymesVar id="newTransfer" type=""*/-->
     <form th:action="@{/home/transfer}" th:object="${newTransfer}" method="POST"
           class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
         <div class="input-group">
@@ -95,31 +97,10 @@
             <input type="text" name="description" placeholder="description" class="form-control">
         </div>
         <div>
-            <button type="submit" class="btn btn-primary btn-sm">ADD Buddy</button>
+            <button type="submit" class="btn btn-primary btn-sm">Transfer</button>
         </div>
     </form>
-    <!--            form to add new contact             -->
-    <form th:action="@{/newContact}" method="POST"
-          class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
-        <div class="input-group">
-            <input type="text" name="email" placeholder="example@mail.com" class="form-control">
-        </div>
 
-        <div>
-            <button type="submit" class="btn btn-primary btn-sm">ADD Buddy</button>
-        </div>
-    </form>
-    <!--            form to delete contact             -->
-    <form th:action="@{/deleteContact}" th:method="DELETE"
-          class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
-        <div class="input-group">
-            <input type="text" name="email" placeholder="example@mail.com" class="form-control">
-        </div>
-
-        <div>
-            <button type="submit" class="btn btn-primary btn-sm">DELETE Buddy</button>
-        </div>
-    </form>
 </div>
 <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
     <input hidden type="submit" value="Sign Out"/>

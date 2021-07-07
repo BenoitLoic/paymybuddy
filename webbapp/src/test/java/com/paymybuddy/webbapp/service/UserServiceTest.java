@@ -28,18 +28,18 @@ class UserServiceTest {
 
     @Mock
     UserRepository userRepositoryMock;
-    @Mock
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+@Mock
+    BCryptPasswordEncoder bCryptPasswordEncoderMock;
     @InjectMocks
     UserServiceImpl userService;
 
 
-    private int id = 1;
-    private String email = "testmail";
-    private String lastName = "Doe";
-    private String firstName = "John";
-    private String password = "testpassword";
-    private int balance = 0;
+    private final int id = 1;
+    private final String email = "testmail";
+    private final String lastName = "Doe";
+    private final String firstName = "John";
+    private final String password = "testpassword";
+    private final int balance = 0;
     private String phone;
     private String addressPrefix;
     private String addressNumber;
@@ -48,23 +48,23 @@ class UserServiceTest {
     private String city;
 
 
-    /**
-     *
-     */
     @Test
     void saveUserValid() {
 
 //        GIVEN
-        User user = new User();
+        UserModel user = new UserModel();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
         user.setPassword(password);
+
+        User user1 = new User(email,lastName,firstName,password);
 //        WHEN
+
         userService.save(user);
 //        THEN
 
-        verify(userRepositoryMock, times(1)).save(user);
+        verify(userRepositoryMock, times(1)).save(any());
     }
 
 

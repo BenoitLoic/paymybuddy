@@ -31,12 +31,12 @@ public class UserControllerTest {
     UserControllerImpl userController;
 
 
-    private int id = 1;
-    private String email = "testmail";
-    private String lastName = "John";
-    private String firstName = "Doe";
-    private String password = "testpassword";
-    private int balance = 0;
+    private final int id = 1;
+    private final String email = "testmail";
+    private final String lastName = "John";
+    private final String firstName = "Doe";
+    private final String password = "testpassword";
+    private final int balance = 0;
     private String phone;
     private String addressPrefix;
     private String addressNumber;
@@ -54,74 +54,8 @@ public class UserControllerTest {
         return user;
     }
 
-//
-//    @Test
-//    public void createUserValid() throws Exception {
-//        //GIVEN
-//        ObjectMapper obm = new ObjectMapper();
-//        ObjectNode jsonNodes = obm.createObjectNode();
-//        jsonNodes.set("firstName", TextNode.valueOf(firstName));
-//        jsonNodes.set("lastName", TextNode.valueOf(lastName));
-//        jsonNodes.set("email", TextNode.valueOf(email));
-//        jsonNodes.set("password", TextNode.valueOf(password));
-//
-//        //WHEN
-//
-//        //THEN
-//        mockMvc.perform(
-//                MockMvcRequestBuilders.post("/V1/user")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(jsonNodes.toString()))
-//                .andExpect(MockMvcResultMatchers.status().isCreated());
-//
-//    }
-//
-//    @Test
-//    public void createUserInvalid() throws Exception {
-//
-//        //GIVEN
-//        ObjectMapper obm = new ObjectMapper();
-//        ObjectNode jsonNodes = obm.createObjectNode();
-//        jsonNodes.set("firstName", TextNode.valueOf(firstName));
-//        jsonNodes.set("lastName", TextNode.valueOf(lastName));
-//        jsonNodes.set("email", TextNode.valueOf(email));
-//        jsonNodes.set("password", TextNode.valueOf(" "));
-//
-//        //WHEN
-//
-//        //THEN
-//        mockMvc.perform(
-//                MockMvcRequestBuilders.post("/V1/user")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(jsonNodes.toString()))
-//                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-//
-//    }
-//
-//    @Test
-//    public void createUserWhen_UserAlreadyExist() throws Exception {
-//
-////        GIVEN
-//        ObjectMapper obm = new ObjectMapper();
-//        ObjectNode jsonNodes = obm.createObjectNode();
-//        jsonNodes.set("firstName", TextNode.valueOf(firstName));
-//        jsonNodes.set("lastName", TextNode.valueOf(lastName));
-//        jsonNodes.set("email", TextNode.valueOf(email));
-//        jsonNodes.set("password", TextNode.valueOf(password));
-//
-////        WHEN
-//        Mockito.doThrow(DataAlreadyExistException.class)
-//                .when(userServiceMock)
-//                .save(Mockito.any());
-//
-////        THEN
-//
-//        mockMvc.perform(
-//                MockMvcRequestBuilders.post("/register/user")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(jsonNodes.toString()))
-//                .andExpect(MockMvcResultMatchers.status().isConflict());
-//    }
+
+
 
     @Test
     public void findAllValid() throws Exception {
@@ -132,7 +66,7 @@ public class UserControllerTest {
 
         // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/V1/users"))
+                MockMvcRequestBuilders.get("/home/users"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
 
@@ -153,7 +87,7 @@ public class UserControllerTest {
 
         // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/V1/user")
+                MockMvcRequestBuilders.put("/home/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonNodes.toString()))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -198,7 +132,7 @@ public class UserControllerTest {
         Mockito.doThrow(DataNotFindException.class).when(userServiceMock).update(Mockito.any());
         // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/V1/user")
+                MockMvcRequestBuilders.put("/home/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonNodes.toString()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -214,7 +148,7 @@ public class UserControllerTest {
 
         // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/V1/user")
+                MockMvcRequestBuilders.delete("/home/user")
                         .param("id", validParam))
                 .andExpect(MockMvcResultMatchers.status().isAccepted());
 
@@ -230,7 +164,7 @@ public class UserControllerTest {
 
         // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/V1/user")
+                MockMvcRequestBuilders.delete("/home/user")
                         .param("id", invalidParam))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
@@ -245,7 +179,7 @@ public class UserControllerTest {
         Mockito.doThrow(DataNotFindException.class).when(userServiceMock).deleteUserById(Mockito.anyInt());
         // THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/V1/user")
+                MockMvcRequestBuilders.delete("/home/user")
                         .param("id", validParam))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 

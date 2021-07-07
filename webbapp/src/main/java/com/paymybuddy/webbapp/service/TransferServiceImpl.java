@@ -16,6 +16,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+
+/**
+ * Implementation of transferService.
+ * Contain some method to add/remove currency from user balance.
+ * Contain some method to create/get transfer.
+ */
 @Service
 public class TransferServiceImpl implements TransferService {
 
@@ -87,7 +93,7 @@ public class TransferServiceImpl implements TransferService {
             // save
             return true;
         } else {
-            throw new UnicornException("Error - Balance over max value.");
+            throw new UnicornException("Error - Balance can't be negative.");
         }
 
     }
@@ -145,31 +151,26 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public List<GetTransferDto> getTransfers(String userEmail) {
 
-        User user = null;
+
         Optional<User> userOp = userRepository.findByEmail(userEmail);
 
-
+        int userId=0;
         if (userOp.isPresent()) {
-            user = userOp.get();
+            userId = userOp.get().getId();
         }
-        System.out.println(user);
-        System.out.println("friend : " + user.getContacts());
-        System.out.println("as creditor : "+user.getTransfersAsCreditor());
-        System.out.println("as debtor : "+user.getTransfersAsDebtor());
+
+
         List<GetTransferDto> transactions = new ArrayList<>();
 
-        for (Transfer transfer : user.getTransfersAsDebtor()) {
+        for (Transfer transfer : transferRepository.findAllByCreditorId(userId)) {
             //String contactName, String description, int amount
-            GetTransferDto temp = new GetTransferDto(transfer.getCreditor().getFirstName(),transfer.getDescription(), transfer.getAmount());
-            transactions.add(temp);
-            System.out.println(temp);
-        }
-
-        for (Transfer transfer : user.getTransfersAsCreditor()) {
             GetTransferDto temp = new GetTransferDto(transfer.getDebtor().getFirstName(),transfer.getDescription(), transfer.getAmount());
             transactions.add(temp);
-            System.out.println(temp);
+        }
 
+        for (Transfer transfer : transferRepository.findAllByDebtorId(userId)) {
+            GetTransferDto temp = new GetTransferDto(transfer.getCreditor().getFirstName(),transfer.getDescription(), -transfer.getAmount());
+            transactions.add(temp);
         }
 
         return transactions;

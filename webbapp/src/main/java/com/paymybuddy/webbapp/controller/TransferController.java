@@ -1,11 +1,10 @@
 package com.paymybuddy.webbapp.controller;
 
-import com.paymybuddy.webbapp.dto.GetTransferDto;
 import com.paymybuddy.webbapp.dto.NewTransferDto;
+import org.springframework.ui.Model;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
-import java.util.List;
 
 public interface TransferController {
     /**
@@ -31,15 +30,15 @@ public interface TransferController {
      *
      * @param transfer Dto with creditorEmail, amount, description
      * @param principal the current user (debtor)
-     * @return
+     * @return the previous page.
      */
-    GetTransferDto createTransfer(NewTransferDto transfer, Principal principal);
+    RedirectView createTransfer(NewTransferDto transfer, Principal principal);
 
     /**
      * This method will get all the transfer of the current user.
      * @param principal the current user
      * @return the view for transfer
      */
-    List<GetTransferDto> getTransfers(Principal principal);
+    String getTransfers(Model model,Principal principal);
 
 }

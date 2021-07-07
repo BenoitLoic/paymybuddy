@@ -14,7 +14,7 @@ public interface UserService {
      *
      * @param theUser to save
      */
-    void save(User theUser);
+    void save(@javax.validation.Valid UserModel theUser);
 
     /**
      * This method update the user account by calling repository.
@@ -36,7 +36,7 @@ public interface UserService {
      *
      * @return List of all users
      */
-    List<User> findAll();
+    List<UserModel> findAll();
 
     /**
      * This method will return an user from repository based on its id.

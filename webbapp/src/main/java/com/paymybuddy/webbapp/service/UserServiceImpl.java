@@ -7,6 +7,7 @@ import com.paymybuddy.webbapp.exception.DataNotFindException;
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+
     /**
      * This method save the given user in DB by calling Dao.
      * this method is used to create a new user
@@ -36,15 +38,19 @@ public class UserServiceImpl implements UserService {
      * @param theUser to save
      */
     @Override
-    public void save(User theUser) {
+    public void save( UserModel theUser) {
+
+        User user = new User();
+        BeanUtils.copyProperties(theUser,user);
 
         // Hash password using BCrypt
         if (theUser.getPassword() != null) {
-            theUser.setPassword(bCryptPasswordEncoder.encode(theUser.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(theUser.getPassword()));
         }
         // Save user using JpaRepository.save
-        userRepository.save(theUser);
+        userRepository.save(user);
     }
+
 
     /**
      * This method update the user account by calling repository.
@@ -57,7 +63,6 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(theUser.getId())) {
             throw new DataNotFindException("Can't find account for user: " + theUser.getEmail());
         }
-
         // Copy non null field from user model to user entity
         User userEntity = userRepository.getById(theUser.getId());
 
@@ -97,13 +102,15 @@ public class UserServiceImpl implements UserService {
             userEntity.setZip(theUser.getZip());
         }
 
-
         userRepository.save(userEntity);
-
-
     }
 
 
+    /**
+     * This method will delete an user from database with its id.
+     *
+     * @param theId of the user to delete
+     */
     @Override
     public void deleteUserById(int theId) {
 
@@ -116,20 +123,51 @@ public class UserServiceImpl implements UserService {
 
     }
 
+
+    /**
+     * This method will return all user from repository
+     *
+     * @return List of all users
+     */
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserModel> findAll() {
+
+        List<UserModel> users = new ArrayList<>();
+        for (User user : userRepository.findAll()){
+            UserModel temp = new UserModel();
+            temp.setEmail(user.getEmail());
+            temp.setFirstName(user.getFirstName());
+            temp.setId(user.getId());
+            users.add(temp);
+        }
+
+        return users;
     }
 
+
+    /**
+     * This method will return an user from repository based on its id.
+     *
+     * @param theId of the user retrieve
+     * @return the user
+     */
     @Override
     public Optional<User> findById(int theId) {
         return userRepository.findById(theId);
     }
 
+
+    /**
+     * This method will return an user from repository based on its email.
+     *
+     * @param email of the user to retrieve
+     * @return the user
+     */
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
 
     /**
      * This method will add a new contact to the contact list of the current user using repository.
@@ -161,10 +199,11 @@ public class UserServiceImpl implements UserService {
         return contact.getFirstName() + " " + contact.getLastName();
     }
 
+
     /**
      * This method will delete the given contact from the contact list of the current user
      *
-     * @param email the email of the contact to delete from list
+     * @param email     the email of the contact to delete from list
      * @param userEmail the email of the current user
      * @return the firstName + " " + lastName of the deleted contact
      */
@@ -187,7 +226,7 @@ public class UserServiceImpl implements UserService {
                 contactDto.setLastName(contact.getLastName());
                 deleted = true;
                 // remove contact from list
-               userToDelete= contact;
+                userToDelete = contact;
 
             }
         }
@@ -200,6 +239,7 @@ public class UserServiceImpl implements UserService {
         return contactDto;
 
     }
+
 
     /**
      * This method returns a collection of all the contacts of the given user.

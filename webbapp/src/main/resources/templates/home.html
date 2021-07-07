@@ -16,29 +16,29 @@
             <div class="col-md-6">
                 <div class="profile-head">
                     <h5>
-                        <span th:text="${userModel.firstName}"/>
-                        <span th:text="${userModel.lastName}"/>
+                        <span th:text="${theUser.firstName}"></span>
+                        <span th:text="${theUser.lastName}"></span>
                     </h5>
                     <h6>
                         Last connection: <span th:text="TODO"></span>
                     </h6>
-                    <p class="profile-head">BALANCE : <span th:text="${userModel.balance}"></span></p>
+                    <p class="profile-head">BALANCE : <span th:text="${theUser.balance}"></span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home-tab" role="tab"
                                aria-controls="home" aria-selected="true">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a th:href="@{/home/transfert}" class="nav-link" id="transfer-tab" data-toggle="tab"
-                               href="#transfer" role="tab" aria-controls="profile" aria-selected="false">Transfer</a>
+                            <a th:href="@{/home/transfer}" class="nav-link" id="transfer-tab" data-toggle="tab"
+                               href="#transfer-tab" role="tab" aria-controls="profile" aria-selected="false">Transfer</a>
                         </li>
                         <li class="nav-item">
                             <a th:href="@{/home/profile}" class="nav-link" id="profile-tab" data-toggle="tab"
-                               href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                               href="#profile-tab" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a th:href="@{/home/getContact}" class="nav-link" id="contact-tab" data-toggle="tab"
-                               href="#contact" role="tab" aria-controls="profile" aria-selected="false">Contact</a>
+                            <a th:href="@{/home/contact}" class="nav-link" id="contact-tab" data-toggle="tab"
+                               href="#contact-tab" role="tab" aria-controls="profile" aria-selected="false">Contact</a>
                         </li>
                         <li class="nav-item">
                             <a href="javascript: logoutForm.submit()" role="menuitem" class="nav-link">Sign out</a>
@@ -64,7 +64,7 @@
                                 <label>First name</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${userModel.firstName}"></p>
+                                <p th:text="${theUser.firstName}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -72,7 +72,7 @@
                                 <label>Last name</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${userModel.lastName}"></p>
+                                <p th:text="${theUser.lastName}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -80,7 +80,7 @@
                                 <label>Balance</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${userModel.balance}"></p>
+                                <p th:text="${theUser.balance}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -88,7 +88,7 @@
                                 <label>Email</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${userModel.email}"></p>
+                                <p th:text="${theUser.email}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -96,7 +96,7 @@
                                 <label>Phone</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${userModel.phone}"></p>
+                                <p th:text="${theUser.phone}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -104,9 +104,9 @@
                                 <label>Address</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${userModel.addressNumber}"></p>
-                                <p th:text="${userModel.addressPrefix}"></p>
-                                <p th:text="${userModel.addressStreet}"></p>
+                                <p th:text="${theUser.addressNumber}"></p>
+                                <p th:text="${theUser.addressPrefix}"></p>
+                                <p th:text="${theUser.addressStreet}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -114,7 +114,7 @@
                                 <label>City</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${userModel.city}"></p>
+                                <p th:text="${theUser.city}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -122,7 +122,7 @@
                                 <label>Zip</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${userModel.zip}"></p>
+                                <p th:text="${theUser.zip}"></p>
                             </div>
                         </div>
                     </div>

@@ -1,42 +1,28 @@
-package com.paymybuddy.webbapp.entity;
+package com.paymybuddy.webbapp.model;
 
-import javax.persistence.*;
+import com.paymybuddy.webbapp.entity.User;
+
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "transaction")
-public class Transfer {
+public class TransferModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
-    @Column(name = "user_debtor_id")
     private int debtorId;
 
-    @Column(name = "user_creditor_id")
     private int creditorId;
 
-    @Column(name = "description")
     private String description;
 
-    @Column(name = "amount")
     private int amount;
 
-    @Column(name = "date")
     private Timestamp date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_debtor_id", updatable = false, insertable = false)
     private User debtor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_creditor_id", updatable = false, insertable = false)
     private User creditor;
 
-    public Transfer() {
+    public TransferModel() {
     }
 
     public int getId() {
@@ -83,9 +69,8 @@ public class Transfer {
         return date;
     }
 
-    @PrePersist
-    public void setDate() {
-        date = Timestamp.valueOf(LocalDateTime.now());
+    public void setDate(Timestamp date) {
+        this.date = date;
     }
 
     public User getDebtor() {
@@ -106,7 +91,7 @@ public class Transfer {
 
     @Override
     public String toString() {
-        return "Transfer{" +
+        return "TransferModel{" +
                 "id=" + id +
                 ", debtorId=" + debtorId +
                 ", creditorId=" + creditorId +

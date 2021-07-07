@@ -1,13 +1,19 @@
 package com.paymybuddy.webbapp.controller;
 
-import com.paymybuddy.webbapp.entity.User;
+import com.paymybuddy.webbapp.dto.NewUserDto;
+import com.paymybuddy.webbapp.exception.BadArgumentException;
 import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
+import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 
@@ -37,17 +43,16 @@ public class RegistrationControllerImpl implements RegistrationController {
      * This method create a new user in db.
      *
      * @param newUser       the new user with all field mandatory (except balance and id).
-     * @param bindingResult
      * @return html page that confirm registration
      */
     @Override
-    @PostMapping("/createNewUser")
+    @PostMapping(value = "/createNewUser")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerNewUser(@Valid User newUser, BindingResult bindingResult) {
+    public String registerNewUser(@Valid NewUserDto newUser, BindingResult bindingResult) {
 
         // Check if there is error in validation
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("KO - error in registration form.");
+            throw new BadArgumentException("KO - error in registration form.");
         }
 
         // Check if email already exist in DB.
@@ -56,8 +61,11 @@ public class RegistrationControllerImpl implements RegistrationController {
             throw new DataAlreadyExistException("KO - user: " + newUser.getEmail() + " already exist.");
         }
 
+        UserModel user = new UserModel();
+        BeanUtils.copyProperties(newUser, user);
+
         // Create user
-        userService.save(newUser);
+        userService.save(user);
 
         return "registration-confirmation";
     }

@@ -3,6 +3,7 @@ package com.paymybuddy.webbapp.dao;
 import com.paymybuddy.webbapp.dto.GetTransferDto;
 import com.paymybuddy.webbapp.entity.Transfer;
 import com.paymybuddy.webbapp.entity.User;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-
+@Log4j2
 @Repository
 public class TransferDaoImpl implements TransferDao {
 
@@ -28,35 +29,6 @@ public class TransferDaoImpl implements TransferDao {
      * @param transfer the transfer entity
      * @return GetTransferDto(creditorFirstName, description, amount)
      */
-//    @Override
-//    @Transactional
-//    public GetTransferDto saveNewTransfer(User creditor, User debtor, Transfer transfer) {
-//
-//        // create session factory
-//        SessionFactory factory = new Configuration()
-//                .configure()
-//                .addAnnotatedClass(User.class)
-//                .addAnnotatedClass(Transfer.class)
-//                .buildSessionFactory();
-//        Session session = factory.getCurrentSession();
-//
-//        // start transaction
-//        session.beginTransaction();
-//        System.out.println("debtor: "+debtor);
-//        System.out.println("creditor: " + creditor);
-//        System.out.println(transfer);
-//        // save creditor and debtor
-//        session.update(debtor);
-//        session.getTransaction().commit();
-//        session.beginTransaction();
-//        session.update(creditor);
-//
-//        // commit transaction
-//        session.getTransaction().commit();
-//
-//        //GetTransferDto(String contactName, String description, int amount)
-//        return new GetTransferDto(creditor.getFirstName(), transfer.getDescription(), transfer.getAmount());
-//    }
     @Override
     @Transactional
     public GetTransferDto saveNewTransfer(User creditor, User debtor, Transfer transfer) {
@@ -64,15 +36,19 @@ public class TransferDaoImpl implements TransferDao {
 
             entityManager = entityManagerF.createEntityManager();
             tx = entityManager.getTransaction();
+
             tx.begin();
 
             User userCreditor = entityManager.find(User.class, creditor.getId());
-            userCreditor = creditor;
+            userCreditor.setBalance(creditor.getBalance());
 
             User userDebtor = entityManager.find(User.class, debtor.getId());
-            userCreditor = debtor;
+            userDebtor.setBalance(debtor.getBalance());
 
             entityManager.persist(transfer);
+
+
+            //TODO: trouver un moyen de vérifier que les requêtes sont faites en BATCH.
 
             tx.commit();
 

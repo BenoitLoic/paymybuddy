@@ -1,98 +1,36 @@
-package com.paymybuddy.webbapp.entity;
+package com.paymybuddy.webbapp.dto;
+
+import javax.validation.constraints.NotBlank;
 
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+public class NewUserDto {
 
-
-@Entity
-@Table(name = "user", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
-})
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-
-    @Column(name = "email")
+    private int id = 0;
+    @NotBlank(message = "email is mandatory")
     private String email;
-
-    @Column(name = "last_name")
+    @NotBlank(message = "lastName is mandatory")
     private String lastName;
-
-    @Column(name = "first_name")
+    @NotBlank(message = "firstName is mandatory")
     private String firstName;
-
-    @Column(name = "password")
+    @NotBlank(message = "password is mandatory")
     private String password;
 
-    @Column(name = "balance")
-    private int balance;
+    private int balance = 0;
 
-    @Column(name = "phone")
     private String phone;
 
-    @Column(name = "address_prefix")
     private String addressPrefix;
 
-    @Column(name = "address_number")
     private String addressNumber;
 
-    @Column(name = "address_street")
     private String addressStreet;
 
-    @Column(name = "zip")
     private String zip;
 
-    @Column(name = "city")
     private String city;
-
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "contact",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "contact_id"))
-    private final Set<User> contacts = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "contact",
-            joinColumns = @JoinColumn(name = "contact_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private final Set<User> asContacts = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "transaction",
-    joinColumns = @JoinColumn(name = "user_creditor_id"),
-    inverseJoinColumns =  @JoinColumn(name = "user_debtor_id"))
-    private final Set<Transfer> transfersAsCreditor = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "transaction",
-            joinColumns = @JoinColumn(name = "user_debtor_id"),
-            inverseJoinColumns =  @JoinColumn(name = "user_creditor_id"))
-    private final Set<Transfer> transfersAsDebtor = new HashSet<>();
-
-
-
-    public User() {
-    }
-
-    public User(String email, String lastName, String firstName, String password) {
-        this.email = email;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.password = password;
-    }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getEmail() {
@@ -131,9 +69,6 @@ public class User {
         return balance;
     }
 
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
 
     public String getPhone() {
         return phone;
@@ -183,25 +118,9 @@ public class User {
         this.city = city;
     }
 
-    public Set<User> getContacts() {
-        return contacts;
-    }
-
-    public Set<User> getAsContacts() {
-        return asContacts;
-    }
-
-    public Set<Transfer> getTransfersAsCreditor() {
-        return transfersAsCreditor;
-    }
-
-    public Set<Transfer> getTransfersAsDebtor() {
-        return transfersAsDebtor;
-    }
-
     @Override
     public String toString() {
-        return "User{" +
+        return "NewUserDto{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", lastName='" + lastName + '\'' +
