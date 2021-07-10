@@ -13,6 +13,8 @@ public class NewTransferDto {
     @Min(50)
     private int amount;
 
+    private int charge;
+
     private String description;
 
     public NewTransferDto(String creditorEmail, int amount, String description) {
@@ -54,6 +56,14 @@ public class NewTransferDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getCharge() {
+        return charge;
+    }
+
+    public void setCharge(int charge) {
+        this.charge = charge;
     }
 
     @Override

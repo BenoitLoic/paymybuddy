@@ -8,12 +8,10 @@ import com.paymybuddy.webbapp.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -46,12 +44,13 @@ public class RegistrationControllerImpl implements RegistrationController {
      * @return html page that confirm registration
      */
     @Override
-    @PostMapping(value = "/createNewUser")
+    @PostMapping( value = "/createNewUser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerNewUser(@Valid NewUserDto newUser, BindingResult bindingResult) {
-
+    public String registerNewUser(@Valid  NewUserDto newUser, BindingResult bindingResult) {
+        System.out.println("new user :"+newUser);
         // Check if there is error in validation
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getFieldError());
             throw new BadArgumentException("KO - error in registration form.");
         }
 

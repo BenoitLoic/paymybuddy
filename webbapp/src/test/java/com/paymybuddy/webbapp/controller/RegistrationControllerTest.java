@@ -1,13 +1,9 @@
 package com.paymybuddy.webbapp.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.paymybuddy.webbapp.dto.NewUserDto;
 import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
 import com.paymybuddy.webbapp.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,8 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
 @WebMvcTest(controllers = RegistrationControllerImpl.class)
@@ -27,10 +24,8 @@ public class RegistrationControllerTest {
     MockMvc mockMvc;
     @MockBean
     UserServiceImpl userServiceMock;
-    @InjectMocks
-    UserControllerImpl userController;
 
-
+private final String createUserUrl = "/registration/createNewUser";
     private final int id = 1;
     private final String email = "testmail";
     private final String lastName = "John";
@@ -58,16 +53,16 @@ public class RegistrationControllerTest {
     @Test
     public void createUserValid() throws Exception {
         //GIVEN
-        ObjectMapper obm = new ObjectMapper();
-        String json = obm.writeValueAsString(getUserTest());
+        NewUserDto newUserDto = this.getUserTest();
 
         //WHEN
 
         //THEN
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/registration/createNewUser")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc
+                .perform(
+                        post(createUserUrl)
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                                .content("firstName="+newUserDto.getFirstName()+"&lastName="+newUserDto.getLastName()+"&email="+newUserDto.getEmail()+"&password="+newUserDto.getPassword()))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }
@@ -76,20 +71,15 @@ public class RegistrationControllerTest {
     public void createUserInvalid() throws Exception {
 
         //GIVEN
-        ObjectMapper obm = new ObjectMapper();
-        ObjectNode jsonNodes = obm.createObjectNode();
-        jsonNodes.set("firstName", TextNode.valueOf(firstName));
-        jsonNodes.set("lastName", TextNode.valueOf(lastName));
-        jsonNodes.set("email", TextNode.valueOf(email));
-        jsonNodes.set("password", TextNode.valueOf(" "));
-
+        NewUserDto newUserDto = this.getUserTest();
+newUserDto.setPassword(" ");
         //WHEN
 
         //THEN
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/registration/createNewUser")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonNodes.toString()))
+                post(createUserUrl)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .content("firstName="+newUserDto.getFirstName()+"&lastName="+newUserDto.getLastName()+"&email="+newUserDto.getEmail()+"&password="+newUserDto.getPassword()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
@@ -98,12 +88,8 @@ public class RegistrationControllerTest {
     public void createUserWhen_UserAlreadyExist() throws Exception {
 
 //        GIVEN
-        ObjectMapper obm = new ObjectMapper();
-        ObjectNode jsonNodes = obm.createObjectNode();
-        jsonNodes.set("firstName", TextNode.valueOf(firstName));
-        jsonNodes.set("lastName", TextNode.valueOf(lastName));
-        jsonNodes.set("email", TextNode.valueOf(email));
-        jsonNodes.set("password", TextNode.valueOf(password));
+        NewUserDto newUserDto = this.getUserTest();
+
 
 //        WHEN
         Mockito.doThrow(DataAlreadyExistException.class)
@@ -113,9 +99,9 @@ public class RegistrationControllerTest {
 //        THEN
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/registration/createNewUser")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonNodes.toString()))
+                post(createUserUrl)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .content("firstName="+newUserDto.getFirstName()+"&lastName="+newUserDto.getLastName()+"&email="+newUserDto.getEmail()+"&password="+newUserDto.getPassword()))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
     }
 

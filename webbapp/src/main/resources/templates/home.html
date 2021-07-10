@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Pay my Buddy</title>
     <!--    Bootstrap ref   -->
-    <link rel="stylesheet" href="style.css">
+
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -132,20 +132,20 @@
         </div>
     </form>
     <!--            form to add money             -->
-    <form th:action="@{/balance/add}" method="POST" class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
-        <div class="input-group">
+    <form th:action="@{/home/balance/add}" method="POST" class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
+        <label class="input-group">
             <input type="text" name="amount" placeholder="ex: 100" class="form-control">
-        </div>
+        </label>
 
         <div>
             <button type="submit" class="btn btn-primary btn-sm">ADD Money</button>
         </div>
     </form>
     <!--            form to remove money             -->
-    <form th:action="@{/balance/remove}" method="POST" class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
-        <div class="input-group">
+    <form th:action="@{/home/balance/remove}" method="POST" class="form-horizontal col-md-2 col-md-offset-2 col-sm-6 col-sm-offset-2">
+        <label class="input-group">
             <input type="text" name="amount" placeholder="ex: 100" class="form-control">
-        </div>
+        </label>
 
         <div>
             <button type="submit" class="btn btn-primary btn-sm">Remove Money</button>

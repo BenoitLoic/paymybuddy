@@ -6,7 +6,7 @@ import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
 import com.paymybuddy.webbapp.exception.DataNotFindException;
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.repository.UserRepository;
-import lombok.extern.log4j.Log4j2;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 
-@Log4j2
+
 @Service
 public class UserServiceImpl implements UserService {
 

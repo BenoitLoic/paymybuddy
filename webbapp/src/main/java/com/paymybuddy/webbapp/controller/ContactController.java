@@ -23,11 +23,11 @@ public interface ContactController {
 
     /**
      * This method will delete a contact from the ContactList of ths user.
-     *
-     * @param email the email of the contact to delete
+     *  @param email the email of the contact to delete
      * @param principal the current user logged in
+     * @return success page
      */
-    void deleteContact(String email, Principal principal);
+    String deleteContact(String email, Principal principal);
 
 
     /**

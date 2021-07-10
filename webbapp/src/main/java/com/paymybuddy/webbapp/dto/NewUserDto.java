@@ -6,13 +6,13 @@ import javax.validation.constraints.NotBlank;
 public class NewUserDto {
 
     private int id = 0;
-    @NotBlank(message = "email is mandatory")
+    @NotBlank
     private String email;
-    @NotBlank(message = "lastName is mandatory")
+    @NotBlank
     private String lastName;
-    @NotBlank(message = "firstName is mandatory")
+    @NotBlank
     private String firstName;
-    @NotBlank(message = "password is mandatory")
+    @NotBlank
     private String password;
 
     private int balance = 0;
@@ -28,6 +28,9 @@ public class NewUserDto {
     private String zip;
 
     private String city;
+
+    public NewUserDto() {
+    }
 
     public int getId() {
         return id;

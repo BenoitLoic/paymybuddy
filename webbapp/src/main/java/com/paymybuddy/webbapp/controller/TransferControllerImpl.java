@@ -6,10 +6,10 @@ import com.paymybuddy.webbapp.exception.UserNotAuthenticatedException;
 import com.paymybuddy.webbapp.service.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -30,17 +30,17 @@ public class TransferControllerImpl implements TransferController {
      *
      * @param amount    of money to add
      * @param principal the current user
-     * @return should redirect to user's home page
+     * @return success page
      */
     @Override
-    @PostMapping("/balance/add")
+    @PostMapping(value = "/balance/add",consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public RedirectView addCash(@RequestParam int amount, Principal principal) {
+    public String addCash(@RequestParam int amount, Principal principal) {
 
 
         // check if there is an user connected
-        if (principal.getName() == null) {
-            return new RedirectView(loginPageUrl);
+        if (principal == null || principal.getName() == null) {
+            throw new UserNotAuthenticatedException("KO - User must be authenticated");
         }
         String userEmail = principal.getName();
 
@@ -48,7 +48,7 @@ public class TransferControllerImpl implements TransferController {
         // call service
         transferService.addCash(amount, userEmail);
         // return view
-        return new RedirectView(userHomePageUrl);
+        return "success";
     }
 
     /**
@@ -56,17 +56,17 @@ public class TransferControllerImpl implements TransferController {
      *
      * @param amount    of money to remove
      * @param principal the current user
-     * @return should redirect to user's home page
+     * @return success page
      */
     @Override
-    @PostMapping("/balance/remove")
+    @PostMapping(value = "/balance/remove",consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public RedirectView removeCash(@RequestParam int amount, Principal principal) {
+    public String removeCash(@RequestParam int amount, Principal principal) {
 
 
         // check if there is an user connected
-        if (principal.getName() == null) {
-            return new RedirectView(loginPageUrl);
+        if (principal == null || principal.getName() == null) {
+            throw new UserNotAuthenticatedException("KO - User must be authenticated");
         }
         String userEmail = principal.getName();
 
@@ -74,7 +74,7 @@ public class TransferControllerImpl implements TransferController {
         // call service
         transferService.removeCash(amount, userEmail);
         // return view
-        return new RedirectView(userHomePageUrl);
+        return "success";
     }
 
     /**
@@ -82,20 +82,19 @@ public class TransferControllerImpl implements TransferController {
      *
      * @param newTransfer Dto with creditorEmail, amount, description
      * @param principal   the current user (debtor)
-     * @return previous page
+     * @return success page
      */
     @Override
-    @PostMapping("/transfer")
+    @PostMapping(value = "/transfer", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public RedirectView createTransfer(@Valid @RequestBody NewTransferDto newTransfer, Principal principal) {
+    public String createTransfer(@Valid @ModelAttribute NewTransferDto newTransfer, Principal principal) {
 
 //        if (bindingResult.hasErrors()){
 //            throw new BadArgumentException("KO - error detected within form");
 //        }
 
         // check principal
-        if (principal.getName() == null) {
+        if (principal == null || principal.getName() == null) {
             throw new UserNotAuthenticatedException("KO - User must be authenticated");
         }
         // add principal to dto
@@ -104,7 +103,7 @@ public class TransferControllerImpl implements TransferController {
         transferService.createTransfer(newTransfer);
         // redirect to getTransfer page
 
-        return new RedirectView("/home/transfer");
+        return "success";
     }
 
     /**
@@ -116,6 +115,11 @@ public class TransferControllerImpl implements TransferController {
     @Override
     @GetMapping("/transfer")
     public String getTransfers(Model model, Principal principal) {
+
+        // check principal
+        if (principal == null || principal.getName() == null) {
+            throw new UserNotAuthenticatedException("KO - User must be authenticated");
+        }
 
         List<GetTransferDto> transfers = transferService.getTransfers(principal.getName());
         model.addAttribute("transfers", transfers);

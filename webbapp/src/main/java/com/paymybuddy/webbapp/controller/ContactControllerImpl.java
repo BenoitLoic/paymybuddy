@@ -1,10 +1,12 @@
 package com.paymybuddy.webbapp.controller;
 
 import com.paymybuddy.webbapp.dto.ContactDto;
-import com.paymybuddy.webbapp.exception.UnicornException;
+import com.paymybuddy.webbapp.exception.BadArgumentException;
 import com.paymybuddy.webbapp.exception.UserNotAuthenticatedException;
 import com.paymybuddy.webbapp.service.UserService;
-import lombok.extern.log4j.Log4j2;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Collection;
 
-@Log4j2
+
 @Controller
 public class ContactControllerImpl implements ContactController {
 
@@ -26,6 +28,7 @@ public class ContactControllerImpl implements ContactController {
         this.userService = userService;
     }
 
+    private static final Logger log = LogManager.getLogger(ContactControllerImpl.class);
 
     /**
      * This method add a new contact to a user ContactList with the email of its future contact
@@ -39,8 +42,7 @@ public class ContactControllerImpl implements ContactController {
     public String addContact(@RequestParam String email, Principal principal) {
 
         if (email == null || email.isBlank()) {
-            System.out.println("error contactEmail == null");
-            throw new UnicornException("Hé Oh c'est nul !");
+            throw new BadArgumentException("Error - blank email.");
         }
         if (principal == null || principal.getName() == null) {
             log.error("Error - user not logged in.");
@@ -50,27 +52,27 @@ public class ContactControllerImpl implements ContactController {
 
         System.out.println(email);
         userService.addNewContact(email, userEmail);
-        return "redirect://home/contact";
+        return "success";
 
     }
 
     /**
      * This method will delete a contact from the ContactList of ths user.
-     *
-     * @param email     the email of the contact to delete
+     *  @param email     the email of the contact to delete
      * @param principal the current user logged in
+     * @return success page
      */
     @Override
     @DeleteMapping("/deleteContact")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteContact(@RequestParam String email, Principal principal) {
+    public String deleteContact(@RequestParam String email, Principal principal) {
 
         if (principal.getName() == null) {
             throw new UserNotAuthenticatedException("Error - User not authenticated.");
         }
         String userEmail = principal.getName();
         userService.deleteContact(email, userEmail);
-
+return "success";
     }
 
     /**

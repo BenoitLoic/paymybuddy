@@ -1,12 +1,9 @@
 package com.paymybuddy.webbapp.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.paymybuddy.webbapp.dto.NewTransferDto;
 import com.paymybuddy.webbapp.exception.BadArgumentException;
 import com.paymybuddy.webbapp.exception.IllegalContactException;
-import com.paymybuddy.webbapp.exception.UnicornException;
+import com.paymybuddy.webbapp.exception.InvalidBalanceException;
 import com.paymybuddy.webbapp.service.TransferServiceImpl;
 import com.paymybuddy.webbapp.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -64,8 +61,9 @@ public class TransferControllerImplTest {
 
         mockMvc
                 .perform(
-                        post(addCashUrl+"?amount=" + amount)
+                        post(addCashUrl + "?amount=" + amount)
                                 .principal(principalMock)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 )
                 .andExpect(status().isAccepted());
     }
@@ -83,8 +81,9 @@ public class TransferControllerImplTest {
 
         mockMvc
                 .perform(
-                        post(addCashUrl+"?amount=" + 0.1)
-                                .principal(principalMock))
+                        post(addCashUrl + "?amount=" + 0.1)
+                                .principal(principalMock).contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                )
                 .andExpect(status().isBadRequest());
 
     }
@@ -105,8 +104,9 @@ public class TransferControllerImplTest {
 
         mockMvc
                 .perform(
-                        post(addCashUrl+"?amount=" + 0)
-                                .principal(principalMock))
+                        post(addCashUrl + "?amount=" + 0)
+                                .principal(principalMock)
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
 
                 .andExpect(status().isBadRequest());
 
@@ -121,15 +121,16 @@ public class TransferControllerImplTest {
         // WHEN
 
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.doThrow(UnicornException.class)
+        Mockito.doThrow(InvalidBalanceException.class)
                 .when(transferServiceMock)
                 .addCash(Mockito.anyInt(), Mockito.anyString());
         // THEN
 
         mockMvc
                 .perform(
-                        post(addCashUrl+"?amount=" + 50)
-                                .principal(principalMock))
+                        post(addCashUrl + "?amount=" + 50)
+                                .principal(principalMock)
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andExpect(status().isBadRequest());
     }
 
@@ -144,8 +145,9 @@ public class TransferControllerImplTest {
         // THEN
         mockMvc
                 .perform(
-                        post(removeCashUrl+"?amount=" + amount)
-                                .principal(principalMock))
+                        post(removeCashUrl + "?amount=" + amount)
+                                .principal(principalMock)
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andExpect(status().isAccepted());
 
     }
@@ -161,8 +163,9 @@ public class TransferControllerImplTest {
         // THEN
         mockMvc
                 .perform(
-                        post(removeCashUrl+"?amount="  + 0.1)
-                                .principal(principalMock))
+                        post(removeCashUrl + "?amount=" + 0.1)
+                                .principal(principalMock)
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andExpect(status().isBadRequest());
 
     }
@@ -175,12 +178,13 @@ public class TransferControllerImplTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.doThrow(UnicornException.class).when(transferServiceMock).removeCash(Mockito.anyInt(), Mockito.anyString());
+        Mockito.doThrow(InvalidBalanceException.class).when(transferServiceMock).removeCash(Mockito.anyInt(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(
-                        post(removeCashUrl+"?amount=" + amount)
-                                .principal(principalMock))
+                        post(removeCashUrl + "?amount=" + amount)
+                                .principal(principalMock)
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andExpect(status().isBadRequest());
 
     }
@@ -191,9 +195,10 @@ public class TransferControllerImplTest {
         // GIVEN
         //NewTransferDto(String creditorEmail, int amount, String description)
         NewTransferDto transferDto = new NewTransferDto(creditorTest, amount, descriptionTest);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(transferDto);
-        System.out.println(json);
+
+        String urlEncoded = "creditorEmail=" + transferDto.getCreditorEmail()
+                + "&amount=" + transferDto.getAmount()
+                + "&description=" + transferDto.getDescription();
 
 
         // WHEN
@@ -203,10 +208,10 @@ public class TransferControllerImplTest {
                 .perform(
                         post(createTransferUrl)
                                 .principal(principalMock)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json))
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                                .content(urlEncoded))
                 .andExpect(status().isCreated());
-        System.out.println(json);
+
     }
 
     @Test
@@ -214,9 +219,11 @@ public class TransferControllerImplTest {
 
         // GIVEN
         //NewTransferDto(String creditorEmail, int amount, String description)
-        NewTransferDto transferDto = new NewTransferDto(" ", amount, descriptionTest);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(transferDto);
+        NewTransferDto transferDto = new NewTransferDto("", amount, descriptionTest);
+
+        String urlEncoded = "creditorEmail=" + transferDto.getCreditorEmail()
+                + "&amount=" + transferDto.getAmount()
+                + "&description=" + transferDto.getDescription();
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
@@ -225,8 +232,8 @@ public class TransferControllerImplTest {
                 .perform(
                         post(createTransferUrl)
                                 .principal(principalMock)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json))
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                                .content(urlEncoded))
                 .andExpect(status().isBadRequest());
 
     }
@@ -235,12 +242,11 @@ public class TransferControllerImplTest {
     public void createTransferInvalidAmount() throws Exception {
         // GIVEN
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode jsonNodes = objectMapper.createObjectNode();
-        //NewTransferDto(String creditorEmail, int amount, String description)
-        jsonNodes.set("creditorEmail", TextNode.valueOf(creditorTest));
-        jsonNodes.set("amount", TextNode.valueOf("5"));
-        jsonNodes.set("description", TextNode.valueOf(descriptionTest));
+        NewTransferDto transferDto = new NewTransferDto(creditorTest, 5, descriptionTest);
+
+        String urlEncoded = "creditorEmail=" + transferDto.getCreditorEmail()
+                + "&amount=" + transferDto.getAmount()
+                + "&description=" + transferDto.getDescription();
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
@@ -249,19 +255,21 @@ public class TransferControllerImplTest {
                 .perform(
                         post(createTransferUrl)
                                 .principal(principalMock)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonNodes.toString()))
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                                .content(urlEncoded))
                 .andExpect(status().isBadRequest());
+
 
     }
 
     @Test
     public void createTransferInvalidPrincipal() throws Exception {
         // GIVEN
-        //NewTransferDto(String creditorEmail, int amount, String description)
         NewTransferDto transferDto = new NewTransferDto(creditorTest, amount, descriptionTest);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(transferDto);
+
+        String urlEncoded = "creditorEmail=" + transferDto.getCreditorEmail()
+                + "&amount=" + transferDto.getAmount()
+                + "&description=" + transferDto.getDescription();
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(null);
@@ -270,8 +278,8 @@ public class TransferControllerImplTest {
                 .perform(
                         post(createTransferUrl)
                                 .principal(principalMock)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json))
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                                .content(urlEncoded))
                 .andExpect(status().isForbidden())
                 .andExpect(
                         mvcResult -> Assertions.assertEquals(
@@ -284,11 +292,12 @@ public class TransferControllerImplTest {
     public void createTransferWhenContactIsInvalid_ShouldThrowIllegalContactException() throws Exception {
 
         // GIVEN
-        //NewTransferDto(String creditorEmail, int amount, String description)
         NewTransferDto transferDto = new NewTransferDto(creditorTest, amount, descriptionTest);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(transferDto);
-        System.out.println(json);
+
+        String urlEncoded = "creditorEmail=" + transferDto.getCreditorEmail()
+                + "&amount=" + transferDto.getAmount()
+                + "&description=" + transferDto.getDescription();
+
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
         Mockito.doThrow(IllegalContactException.class).when(transferServiceMock).createTransfer(Mockito.any());
@@ -297,8 +306,8 @@ public class TransferControllerImplTest {
                 .perform(
                         post(createTransferUrl)
                                 .principal(principalMock)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json))
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                                .content(urlEncoded))
                 .andExpect(status().isConflict());
     }
 
@@ -306,21 +315,22 @@ public class TransferControllerImplTest {
     public void createTransferWhenAmountVerificationFail_ShouldThrowException() throws Exception {
 
         // GIVEN
-        //NewTransferDto(String creditorEmail, int amount, String description)
         NewTransferDto transferDto = new NewTransferDto(creditorTest, amount, descriptionTest);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(transferDto);
+
+        String urlEncoded = "creditorEmail=" + transferDto.getCreditorEmail()
+                + "&amount=" + transferDto.getAmount()
+                + "&description=" + transferDto.getDescription();
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.doThrow(UnicornException.class).when(transferServiceMock).createTransfer(Mockito.any());
+        Mockito.doThrow(InvalidBalanceException.class).when(transferServiceMock).createTransfer(Mockito.any());
         // THEN
         mockMvc
                 .perform(
                         post(createTransferUrl)
                                 .principal(principalMock)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(json))
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                                .content(urlEncoded))
                 .andExpect(status().isBadRequest());
 
     }

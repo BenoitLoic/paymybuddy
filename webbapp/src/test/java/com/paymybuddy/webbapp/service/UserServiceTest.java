@@ -28,7 +28,7 @@ class UserServiceTest {
 
     @Mock
     UserRepository userRepositoryMock;
-@Mock
+    @Mock
     BCryptPasswordEncoder bCryptPasswordEncoderMock;
     @InjectMocks
     UserServiceImpl userService;
@@ -58,7 +58,7 @@ class UserServiceTest {
         user.setEmail(email);
         user.setPassword(password);
 
-        User user1 = new User(email,lastName,firstName,password);
+        User user1 = new User(email, lastName, firstName, password);
 //        WHEN
 
         userService.save(user);
@@ -153,7 +153,7 @@ class UserServiceTest {
 
         // WHEN
         when(userRepositoryMock.findByEmail(email)).thenReturn(userToAdd);
-        when(userRepositoryMock.findByEmail(email+1)).thenReturn(userAccount);
+        when(userRepositoryMock.findByEmail(email + 1)).thenReturn(userAccount);
 
         String returnString = userService.addNewContact(email, email + 1);
         // THEN
@@ -192,7 +192,7 @@ class UserServiceTest {
 
         // WHEN
         when(userRepositoryMock.findByEmail(email)).thenReturn(userToAdd);
-        when(userRepositoryMock.findByEmail(email+1)).thenReturn(userAccount);
+        when(userRepositoryMock.findByEmail(email + 1)).thenReturn(userAccount);
 
 
         // THEN

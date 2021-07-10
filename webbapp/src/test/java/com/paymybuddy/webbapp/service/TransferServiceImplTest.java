@@ -1,12 +1,11 @@
 package com.paymybuddy.webbapp.service;
 
-import com.paymybuddy.webbapp.dao.TransferDao;
 import com.paymybuddy.webbapp.dto.GetTransferDto;
 import com.paymybuddy.webbapp.dto.NewTransferDto;
 import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.exception.BadArgumentException;
 import com.paymybuddy.webbapp.exception.IllegalContactException;
-import com.paymybuddy.webbapp.exception.UnicornException;
+import com.paymybuddy.webbapp.exception.InvalidBalanceException;
 import com.paymybuddy.webbapp.repository.TransferRepository;
 import com.paymybuddy.webbapp.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -27,8 +26,7 @@ class TransferServiceImplTest {
     UserRepository userRepositoryMock;
     @Mock
     TransferRepository transferRepositoryMock;
-    @Mock
-    TransferDao transferDaoMock;
+
 
     @InjectMocks
     TransferServiceImpl transferService;
@@ -98,7 +96,7 @@ class TransferServiceImplTest {
 
         // THEN
         //  verif que l'exception est bien lancée
-        org.junit.jupiter.api.Assertions.assertThrows(UnicornException.class, () -> transferService.addCash(1, userEmail));
+        org.junit.jupiter.api.Assertions.assertThrows(InvalidBalanceException.class, () -> transferService.addCash(1, userEmail));
     }
 
     @Test
@@ -158,7 +156,7 @@ class TransferServiceImplTest {
 
         // THEN
         //vérif qu'on jette bien l'exception
-        org.junit.jupiter.api.Assertions.assertThrows(UnicornException.class, () -> transferService.removeCash(amount, userEmail));
+        org.junit.jupiter.api.Assertions.assertThrows(InvalidBalanceException.class, () -> transferService.removeCash(amount, userEmail));
 
     }
 
@@ -191,7 +189,7 @@ class TransferServiceImplTest {
         // THEN
         Assertions.assertThat(user.getBalance()).isEqualTo(balance-amount);
         Assertions.assertThat(contact.getBalance()).isEqualTo(balance+amount);
-        Mockito.verify(transferDaoMock,Mockito.times(1)).saveNewTransfer(Mockito.any(),Mockito.any(),Mockito.any());
+        Assertions.assertThat(actual).isEqualTo(expected);
 
     }
 
@@ -241,6 +239,6 @@ class TransferServiceImplTest {
         //GetTransferDto(String contactName, String description, int amount)
 
         // THEN
-        org.junit.jupiter.api.Assertions.assertThrows(UnicornException.class, ()-> transferService.createTransfer(newTransfer));
+        org.junit.jupiter.api.Assertions.assertThrows(InvalidBalanceException.class, ()-> transferService.createTransfer(newTransfer));
     }
 }

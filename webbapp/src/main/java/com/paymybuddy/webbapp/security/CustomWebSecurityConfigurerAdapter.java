@@ -14,8 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+   @Autowired
     UserDetailsService userDetailsService;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -26,8 +27,8 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/home/**").authenticated()
-                .antMatchers("/, /test").permitAll()
+                .antMatchers("/home, /home/**").authenticated()
+                .antMatchers("/, /registration/**").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/showLoginPage")
@@ -35,17 +36,6 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
                 .defaultSuccessUrl("/home")
                 .permitAll();
     }
-
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests().anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/showLoginPage")
-//                .loginProcessingUrl()
-//                .permitAll();
-//    }
 
 
     @Bean
