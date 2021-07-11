@@ -14,33 +14,31 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-   @Autowired
-    UserDetailsService userDetailsService;
+  @Autowired UserDetailsService userDetailsService;
 
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService);
+  }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
+        .antMatchers("/home, /home/**")
+        .authenticated()
+        .antMatchers("/, /registration/**")
+        .permitAll()
+        .and()
+        .formLogin()
+        .loginPage("/showLoginPage")
+        .loginProcessingUrl("/authenticateTheUser")
+        .defaultSuccessUrl("/home")
+        .permitAll();
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/home, /home/**").authenticated()
-                .antMatchers("/, /registration/**").permitAll()
-                .and()
-                .formLogin()
-                .loginPage("/showLoginPage")
-                .loginProcessingUrl("/authenticateTheUser")
-                .defaultSuccessUrl("/home")
-                .permitAll();
-    }
-
-
-    @Bean
-    public BCryptPasswordEncoder getPasswordEncoder() {
-        //BCrypt permet de hasher le mdp. la valeur de hash par default est 10.
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public BCryptPasswordEncoder getPasswordEncoder() {
+    // BCrypt permet de hasher le mdp. la valeur de hash par default est 10.
+    return new BCryptPasswordEncoder();
+  }
 }

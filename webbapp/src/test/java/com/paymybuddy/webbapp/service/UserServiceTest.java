@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -144,20 +145,22 @@ class UserServiceTest {
     public void addNewContactValid() {
 
         // GIVEN
-        User user1 = new User(email, lastName, firstName, password);
-        user1.setId(1);
-        Optional<User> userToAdd = Optional.of(user1);
-        User user2 = new User(email + 1, lastName, firstName, password);
-        user2.setId(2);
-        Optional<User> userAccount = Optional.of(user2);
+        User contact = new User(email, lastName, firstName, password);
+        contact.setId(1);
+        Optional<User> contactToAdd = Optional.of(contact);
+        User user = new User(email + 1, lastName, firstName, password);
+        user.setId(2);
+        Optional<User> userAccount = Optional.of(user);
 
         // WHEN
-        when(userRepositoryMock.findByEmail(email)).thenReturn(userToAdd);
+        when(userRepositoryMock.findByEmail(email)).thenReturn(contactToAdd);
         when(userRepositoryMock.findByEmail(email + 1)).thenReturn(userAccount);
 
-        String returnString = userService.addNewContact(email, email + 1);
+        userService.addNewContact(email, email + 1);
+
+        user.getContacts().add(contact);
         // THEN
-        org.assertj.core.api.Assertions.assertThat(returnString).isEqualTo(firstName + " " + lastName);
+        Mockito.verify(userRepositoryMock,times(1)).save(user);
     }
 
     @Test
@@ -212,9 +215,10 @@ class UserServiceTest {
         when(userRepositoryMock.findByEmail("userEmail")).thenReturn(Optional.of(user));
 
 
-        ContactDto actualDto = userService.deleteContact(email, "userEmail");
+        userService.deleteContact(email, "userEmail");
+        user.getContacts().clear();
         // THEN
-        org.assertj.core.api.Assertions.assertThat(actualDto).isEqualTo(expectedDto);
+        Mockito.verify(userRepositoryMock, times(1)).save(user);
 
     }
 

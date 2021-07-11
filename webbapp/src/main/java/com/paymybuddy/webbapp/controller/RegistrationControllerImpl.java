@@ -11,7 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 
@@ -19,53 +22,53 @@ import javax.validation.Valid;
 @RequestMapping("/registration")
 public class RegistrationControllerImpl implements RegistrationController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Autowired
-    public RegistrationControllerImpl(UserService userService) {
-        this.userService = userService;
+  @Autowired
+  public RegistrationControllerImpl(UserService userService) {
+    this.userService = userService;
+  }
+
+  /**
+   * This method return the registration form to create a new user.
+   *
+   * @return html page with registration form
+   */
+  @Override
+  @GetMapping("/signUp")
+  public String signUp() {
+    return "registration-page";
+  }
+
+  /**
+   * This method create a new user in db.
+   *
+   * @param newUser the new user with all field mandatory (except balance and id).
+   * @return html page that confirm registration
+   */
+  @Override
+  @PostMapping(value = "/createNewUser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  @ResponseStatus(HttpStatus.CREATED)
+  public String registerNewUser(@Valid NewUserDto newUser, BindingResult bindingResult) {
+    System.out.println("new user :" + newUser);
+    // Check if there is error in validation
+    if (bindingResult.hasErrors()) {
+      System.out.println(bindingResult.getFieldError());
+      throw new BadArgumentException("KO - error in registration form.");
     }
 
-    /**
-     * This method return the registration form to create a new user.
-     *
-     * @return html page with registration form
-     */
-    @Override
-    @GetMapping("/signUp")
-    public String signUp() {
-        return "registration-page";
+    // Check if email already exist in DB.
+
+    if (userService.findByEmail(newUser.getEmail()).isPresent()) {
+      throw new DataAlreadyExistException("KO - user: " + newUser.getEmail() + " already exist.");
     }
 
-    /**
-     * This method create a new user in db.
-     *
-     * @param newUser       the new user with all field mandatory (except balance and id).
-     * @return html page that confirm registration
-     */
-    @Override
-    @PostMapping( value = "/createNewUser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public String registerNewUser(@Valid  NewUserDto newUser, BindingResult bindingResult) {
-        System.out.println("new user :"+newUser);
-        // Check if there is error in validation
-        if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getFieldError());
-            throw new BadArgumentException("KO - error in registration form.");
-        }
+    UserModel user = new UserModel();
+    BeanUtils.copyProperties(newUser, user);
 
-        // Check if email already exist in DB.
+    // Create user
+    userService.save(user);
 
-        if (userService.findByEmail(newUser.getEmail()).isPresent()) {
-            throw new DataAlreadyExistException("KO - user: " + newUser.getEmail() + " already exist.");
-        }
-
-        UserModel user = new UserModel();
-        BeanUtils.copyProperties(newUser, user);
-
-        // Create user
-        userService.save(user);
-
-        return "registration-confirmation";
-    }
+    return "registration-confirmation";
+  }
 }

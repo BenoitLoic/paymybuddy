@@ -141,7 +141,7 @@ public class TransferControllerImplTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.when(transferServiceMock.addCash(Mockito.anyInt(), Mockito.anyString())).thenReturn(true);
+        Mockito.doNothing().when(transferServiceMock).removeCash(Mockito.anyInt(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(
@@ -160,10 +160,11 @@ public class TransferControllerImplTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
+        Mockito.doThrow(BadArgumentException.class).when(transferServiceMock).removeCash(Mockito.anyDouble(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(
-                        post(removeCashUrl + "?amount=" + 0.1)
+                        post(removeCashUrl + "?amount=" + -0.1)
                                 .principal(principalMock)
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andExpect(status().isBadRequest());
@@ -178,7 +179,7 @@ public class TransferControllerImplTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.doThrow(InvalidBalanceException.class).when(transferServiceMock).removeCash(Mockito.anyInt(), Mockito.anyString());
+        Mockito.doThrow(InvalidBalanceException.class).when(transferServiceMock).removeCash(Mockito.anyDouble(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(
@@ -242,7 +243,7 @@ public class TransferControllerImplTest {
     public void createTransferInvalidAmount() throws Exception {
         // GIVEN
 
-        NewTransferDto transferDto = new NewTransferDto(creditorTest, 5, descriptionTest);
+        NewTransferDto transferDto = new NewTransferDto(creditorTest, -0.01, descriptionTest);
 
         String urlEncoded = "creditorEmail=" + transferDto.getCreditorEmail()
                 + "&amount=" + transferDto.getAmount()

@@ -132,7 +132,7 @@ public class ContactControllerTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn("email");
-        Mockito.when(userServiceMock.deleteContact(Mockito.anyString(), Mockito.anyString())).thenReturn(new ContactDto());
+
         // THEN
         mockMvc
                 .perform(
