@@ -83,7 +83,7 @@ class TransferServiceImplTest {
 
     // GIVEN
     // valeur à soustraire 50
-    double amountD = 50.5;
+    String amountD = "50.5";
     // valeur déjà présente 100
     user.setBalance(balance);
 
@@ -95,7 +95,7 @@ class TransferServiceImplTest {
     // THEN
     // vérif que result = 100 - 50
     Assertions.assertThat(user.getBalance())
-        .isEqualTo(balance.subtract(BigDecimal.valueOf(amountD)));
+        .isEqualTo(balance.subtract(new BigDecimal(amountD)));
   }
 
   @Test
@@ -103,7 +103,7 @@ class TransferServiceImplTest {
 
     // GIVEN
     // valeur à soustraire 100
-    amount = balance.intValue();
+    String amount = "100";
     // valeur déjà présente 100
     user.setBalance(balance);
 
@@ -122,7 +122,7 @@ class TransferServiceImplTest {
 
     // GIVEN
     // valeur à soustraire 50
-
+String amount = "50.5";
     // valeur déjà présente 20
 
     user.setBalance(BigDecimal.valueOf(20));

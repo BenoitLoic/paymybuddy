@@ -22,7 +22,7 @@ public interface TransferController {
    * @param principal the current user
    * @return success page
    */
-  String removeCash(double theAmount, Principal principal);
+  String removeCash(String theAmount, Principal principal);
 
   /**
    * This method will create a new transfer for the current user and the given contact.

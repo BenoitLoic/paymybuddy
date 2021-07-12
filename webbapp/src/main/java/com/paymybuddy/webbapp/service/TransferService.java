@@ -21,7 +21,7 @@ public interface TransferService {
    * @param amount the integer to subtract
    * @param email the email of the current user
    */
-  void removeCash(double amount, String email);
+  void removeCash(String amount, String email);
 
   /**
    * This method will create a new Transfer between two user

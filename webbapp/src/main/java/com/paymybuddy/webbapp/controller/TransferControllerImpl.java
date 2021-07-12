@@ -55,7 +55,7 @@ public class TransferControllerImpl implements TransferController {
   @Override
   @PostMapping(value = "/balance/remove", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public String removeCash(@RequestParam double amount, Principal principal) {
+  public String removeCash(@RequestParam String amount, Principal principal) {
 
 
     // check if there is an user connected

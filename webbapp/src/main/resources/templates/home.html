@@ -20,7 +20,7 @@
                         <span th:text="${theUser.lastName}"></span>
                     </h5>
                     <h6>
-                        Last connection: <span th:text="TODO"></span>
+                        Last connection: <span th:text="${theUser.getLastUpdate()}"></span>
                     </h6>
                     <p class="profile-head">BALANCE : <span th:text="${theUser.balance}"></span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">

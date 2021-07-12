@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,16 +50,21 @@ public class TransferServiceImpl implements TransferService {
     }
     // Get User
     Optional<User> userOptional = userRepository.findByEmail(email);
+
     if (userOptional.isEmpty()) {
       throw new DataNotFindException("KO - Can't find user: " + email);
     }
-    BigDecimal amount = BigDecimal.valueOf(theAmount);
+    System.out.println(theAmount);
+    BigDecimal amount = BigDecimal.valueOf(theAmount).setScale(3, RoundingMode.HALF_DOWN);
+    System.out.println(amount);
     User user = userOptional.get();
 
     // Add Amount
-
-    user.setBalance(amount.add(user.getBalance()));
-
+    BigDecimal userBalance  = user.getBalance();
+    System.out.println("maount : " + amount + " balance : " + userBalance);
+    user.setBalance(amount.add(userBalance));
+    System.out.println("userBalance : "+userBalance);
+    System.out.println("final user balance : " +user.getBalance());
     // save
     userRepository.save(user);
   }
@@ -69,9 +75,11 @@ public class TransferServiceImpl implements TransferService {
    * @param theAmount the integer to subtract
    */
   @Override
-  public void removeCash(double theAmount, String email) {
+  public void removeCash(String theAmount, String email) {
     // Check theAmount > 0
-    if (theAmount <= 0) {
+    BigDecimal amount = new BigDecimal(theAmount).setScale(3,RoundingMode.HALF_DOWN);
+
+    if (amount.signum() <= 0) {
       throw new BadArgumentException("KO - Amount must be > 0.");
     }
     // Get User
@@ -81,11 +89,11 @@ public class TransferServiceImpl implements TransferService {
     }
     // Check User Balance
     User user = userOptional.get();
-    BigDecimal amount = BigDecimal.valueOf(theAmount);
-    BigDecimal checkResult = user.getBalance().subtract(amount);
+    BigDecimal userBalance = user.getBalance().setScale(3,RoundingMode.HALF_DOWN);
+    BigDecimal checkResult = userBalance.subtract(amount);
     // Add Amount and Check if initialBalance + theAmount < Integer.MAX
     if (checkResult.signum() >= 0) {
-      user.setBalance(user.getBalance().subtract(amount));
+      user.setBalance(checkResult.setScale(3,RoundingMode.HALF_DOWN));
 
       // save
       userRepository.save(user);

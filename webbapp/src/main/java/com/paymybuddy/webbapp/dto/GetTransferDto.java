@@ -1,6 +1,7 @@
 package com.paymybuddy.webbapp.dto;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class GetTransferDto {
@@ -34,7 +35,7 @@ public class GetTransferDto {
   }
 
   public BigDecimal getAmount() {
-    return amount;
+    return amount.setScale(2, RoundingMode.HALF_DOWN);
   }
 
   public void setAmount(BigDecimal amount) {
@@ -43,8 +44,12 @@ public class GetTransferDto {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     GetTransferDto that = (GetTransferDto) o;
     return Objects.equals(contactName, that.contactName) && Objects.equals(description, that.description) && Objects.equals(amount, that.amount);
   }

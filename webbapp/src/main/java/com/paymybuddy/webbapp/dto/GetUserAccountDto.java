@@ -1,5 +1,9 @@
 package com.paymybuddy.webbapp.dto;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
 public class GetUserAccountDto {
 
   private int id;
@@ -10,7 +14,7 @@ public class GetUserAccountDto {
 
   private String firstName;
 
-  private int balance;
+  private BigDecimal balance;
 
   private String phone;
 
@@ -23,6 +27,8 @@ public class GetUserAccountDto {
   private String zip;
 
   private String city;
+
+  private LocalDateTime lastUpdate;
 
   public int getId() {
     return id;
@@ -56,12 +62,12 @@ public class GetUserAccountDto {
     this.firstName = firstName;
   }
 
-  public int getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
-  public void setBalance(int balance) {
-    this.balance = balance;
+  public void setBalance(BigDecimal balance) {
+    this.balance = balance.setScale(2, RoundingMode.HALF_DOWN);
   }
 
   public String getPhone() {
@@ -112,6 +118,14 @@ public class GetUserAccountDto {
     this.city = city;
   }
 
+  public LocalDateTime getLastUpdate() {
+    return lastUpdate;
+  }
+
+  public void setLastUpdate(LocalDateTime lastUpdate) {
+    this.lastUpdate = lastUpdate;
+  }
+
   @Override
   public String toString() {
     return "GetUserAccountDto{"
@@ -146,6 +160,8 @@ public class GetUserAccountDto {
         + ", city='"
         + city
         + '\''
+        + ", lastUpdate="
+        + lastUpdate
         + '}';
   }
 }

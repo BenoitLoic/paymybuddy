@@ -34,12 +34,12 @@ public class AccountControllerImpl implements AccountController {
   @ResponseStatus(HttpStatus.OK)
   public String getUserAccount(Principal principal, Model model) {
 
-    String email = principal.getName();
 
-    if (principal.getName() == null) {
+
+    if (principal==null||principal.getName() == null) {
       return "plain-login";
     }
-
+    String email = principal.getName();
     User user = userService.findByEmail(email).get();
     GetUserAccountDto theUser = new GetUserAccountDto();
     BeanUtils.copyProperties(user, theUser, "password");

@@ -141,7 +141,7 @@ public class TransferControllerImplTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.doNothing().when(transferServiceMock).removeCash(Mockito.anyInt(), Mockito.anyString());
+        Mockito.doNothing().when(transferServiceMock).removeCash(Mockito.anyString(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(
@@ -160,7 +160,7 @@ public class TransferControllerImplTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.doThrow(BadArgumentException.class).when(transferServiceMock).removeCash(Mockito.anyDouble(), Mockito.anyString());
+        Mockito.doThrow(BadArgumentException.class).when(transferServiceMock).removeCash(Mockito.anyString(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(
@@ -179,7 +179,7 @@ public class TransferControllerImplTest {
 
         // WHEN
         Mockito.when(principalMock.getName()).thenReturn(userEmail);
-        Mockito.doThrow(InvalidBalanceException.class).when(transferServiceMock).removeCash(Mockito.anyDouble(), Mockito.anyString());
+        Mockito.doThrow(InvalidBalanceException.class).when(transferServiceMock).removeCash(Mockito.anyString(), Mockito.anyString());
         // THEN
         mockMvc
                 .perform(

@@ -134,6 +134,9 @@ public class User {
   }
 
   public BigDecimal getBalance() {
+    if (balance == null) {
+      return new BigDecimal("0.00");
+    }
     return balance;
   }
 

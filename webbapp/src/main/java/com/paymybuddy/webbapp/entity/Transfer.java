@@ -2,7 +2,6 @@ package com.paymybuddy.webbapp.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,7 +26,7 @@ public class Transfer {
   private BigDecimal amount;
 
   @Column(name = "date")
-  private Timestamp date;
+  private LocalDateTime date;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_debtor_id", updatable = false, insertable = false)
@@ -79,13 +78,13 @@ public class Transfer {
     this.amount = amount;
   }
 
-  public Timestamp getDate() {
-    return new Timestamp(date.getTime());
+  public LocalDateTime getDate() {
+    return date;
   }
 
   @PrePersist
   public void setDate() {
-    date = Timestamp.valueOf(LocalDateTime.now());
+    date = LocalDateTime.now();
   }
 
   public User getDebtor() {
