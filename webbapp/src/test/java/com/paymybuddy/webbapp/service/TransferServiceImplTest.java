@@ -1,5 +1,6 @@
 package com.paymybuddy.webbapp.service;
 
+import com.paymybuddy.webbapp.constants.Fare;
 import com.paymybuddy.webbapp.dto.GetTransferDto;
 import com.paymybuddy.webbapp.dto.NewTransferDto;
 import com.paymybuddy.webbapp.entity.User;
@@ -18,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,7 +59,7 @@ class TransferServiceImplTest {
     transferService.addCash(amount, userEmail);
     // THEN
     //  verif que résult = add + init
-    Assertions.assertThat(user.getBalance()).isEqualTo(balance.add(BigDecimal.valueOf(amount)));
+    Assertions.assertThat(user.getBalance()).isEqualTo(balance.add(BigDecimal.valueOf(amount).setScale(3)));
   }
 
   @Test
@@ -95,7 +97,7 @@ class TransferServiceImplTest {
     // THEN
     // vérif que result = 100 - 50
     Assertions.assertThat(user.getBalance())
-        .isEqualTo(balance.subtract(new BigDecimal(amountD)));
+        .isEqualTo(balance.subtract(new BigDecimal(amountD).setScale(3, RoundingMode.HALF_DOWN)));
   }
 
   @Test
@@ -161,15 +163,16 @@ String amount = "50.5";
 
     // WHEN
     Mockito.when(userRepositoryMock.findByEmail(debtor)).thenReturn(Optional.of(user));
-
-    // GetTransferDto(String contactName, String description, int amount)
+Mockito.when(userRepositoryMock.getById(1)).thenReturn(new User());
     GetTransferDto expected =
         new GetTransferDto(contact.getFirstName(), descriptionTest, BigDecimal.valueOf(amountD));
     GetTransferDto actual = transferService.createTransfer(newTransfer);
 
+    BigDecimal charge = Fare.TRANSACTION_FARE.multiply(BigDecimal.valueOf(amountD));
+
     // THEN
     Assertions.assertThat(user.getBalance())
-        .isEqualTo(balance.subtract(BigDecimal.valueOf(amountD)));
+        .isEqualTo(balance.subtract(BigDecimal.valueOf(amountD).add(charge)));
     Assertions.assertThat(contact.getBalance()).isEqualTo(balance.add(BigDecimal.valueOf(amountD)));
     Assertions.assertThat(actual).isEqualTo(expected);
   }

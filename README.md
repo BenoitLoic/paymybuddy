@@ -13,4 +13,5 @@ DB script : src/main/resources/create_db_mysql.sql <br>
 
 
 
+Monetization : 0.5% charge on Transfer, saved on DB table user (id == 1)
 

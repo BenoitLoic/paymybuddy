@@ -1,11 +1,12 @@
 package com.paymybuddy.webbapp.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class NewUserDto {
 
   private final int id = 0;
-  @NotBlank private String email;
+  @Email @NotBlank private String email;
   @NotBlank private String lastName;
   @NotBlank private String firstName;
   @NotBlank private String password;

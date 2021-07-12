@@ -1,5 +1,6 @@
 package com.paymybuddy.webbapp.service;
 
+import com.paymybuddy.webbapp.constants.Fare;
 import com.paymybuddy.webbapp.dto.GetTransferDto;
 import com.paymybuddy.webbapp.dto.NewTransferDto;
 import com.paymybuddy.webbapp.entity.Transfer;
@@ -60,11 +61,11 @@ public class TransferServiceImpl implements TransferService {
     User user = userOptional.get();
 
     // Add Amount
-    BigDecimal userBalance  = user.getBalance();
+    BigDecimal userBalance = user.getBalance();
     System.out.println("maount : " + amount + " balance : " + userBalance);
     user.setBalance(amount.add(userBalance));
-    System.out.println("userBalance : "+userBalance);
-    System.out.println("final user balance : " +user.getBalance());
+    System.out.println("userBalance : " + userBalance);
+    System.out.println("final user balance : " + user.getBalance());
     // save
     userRepository.save(user);
   }
@@ -77,7 +78,7 @@ public class TransferServiceImpl implements TransferService {
   @Override
   public void removeCash(String theAmount, String email) {
     // Check theAmount > 0
-    BigDecimal amount = new BigDecimal(theAmount).setScale(3,RoundingMode.HALF_DOWN);
+    BigDecimal amount = new BigDecimal(theAmount).setScale(3, RoundingMode.HALF_DOWN);
 
     if (amount.signum() <= 0) {
       throw new BadArgumentException("KO - Amount must be > 0.");
@@ -89,11 +90,11 @@ public class TransferServiceImpl implements TransferService {
     }
     // Check User Balance
     User user = userOptional.get();
-    BigDecimal userBalance = user.getBalance().setScale(3,RoundingMode.HALF_DOWN);
+    BigDecimal userBalance = user.getBalance().setScale(3, RoundingMode.HALF_DOWN);
     BigDecimal checkResult = userBalance.subtract(amount);
     // Add Amount and Check if initialBalance + theAmount < Integer.MAX
     if (checkResult.signum() >= 0) {
-      user.setBalance(checkResult.setScale(3,RoundingMode.HALF_DOWN));
+      user.setBalance(checkResult.setScale(3, RoundingMode.HALF_DOWN));
 
       // save
       userRepository.save(user);
@@ -103,7 +104,7 @@ public class TransferServiceImpl implements TransferService {
   }
 
   /**
-   * This method will create a new Transfer between two user
+   * This method will create a new Transfer between two user.
    *
    * @param newTransferDto dto with creditorEmail, debtorEmail, amount and description
    */
@@ -120,8 +121,10 @@ public class TransferServiceImpl implements TransferService {
 
     BigDecimal amount = BigDecimal.valueOf(newTransferDto.getAmount());
 
-    // check user balance
-    if (debtor.getBalance().compareTo(amount) < 0) {
+    BigDecimal charge = amount.multiply(Fare.TRANSACTION_FARE);
+
+    // check user balance0.51.01.52.0SundayMondayTuesdayWednesdayThurs
+    if (debtor.getBalance().compareTo(amount.add(charge)) < 0) {
       throw new InvalidBalanceException("Error - Amount > balance for user : " + debtor.getEmail());
     }
 
@@ -137,12 +140,15 @@ public class TransferServiceImpl implements TransferService {
       throw new IllegalContactException(
           "Error - User: " + newTransferDto.getCreditorEmail() + " in contacts.");
     }
+    // add charge to appAccount
+    User app = userRepository.getById(1);
+    app.setBalance(app.getBalance().add(charge));
 
     // add amount to contact
     creditor.setBalance(creditor.getBalance().add(amount));
 
     // remove amount from user
-    debtor.setBalance(debtor.getBalance().subtract(amount));
+    debtor.setBalance(debtor.getBalance().subtract(amount.add(charge)));
 
     // create entity Transfer
     Transfer transfer = new Transfer();
@@ -152,6 +158,7 @@ public class TransferServiceImpl implements TransferService {
     transfer.setDescription(newTransferDto.getDescription());
 
     // save in repository
+    userRepository.save(app);
     userRepository.save(creditor);
     userRepository.save(debtor);
     transferRepository.save(transfer);
@@ -161,7 +168,7 @@ public class TransferServiceImpl implements TransferService {
   }
 
   /**
-   * This method will get all transfer for the given user
+   * This method will get all transfer for the given user.
    *
    * @param userEmail the email of the current user.
    */
