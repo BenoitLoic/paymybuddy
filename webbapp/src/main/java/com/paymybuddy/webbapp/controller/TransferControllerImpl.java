@@ -1,9 +1,11 @@
 package com.paymybuddy.webbapp.controller;
 
+import com.paymybuddy.webbapp.dto.ContactDto;
 import com.paymybuddy.webbapp.dto.GetTransferDto;
 import com.paymybuddy.webbapp.dto.NewTransferDto;
 import com.paymybuddy.webbapp.exception.UserNotAuthenticatedException;
 import com.paymybuddy.webbapp.service.TransferService;
+import com.paymybuddy.webbapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -20,6 +23,7 @@ import java.util.List;
 public class TransferControllerImpl implements TransferController {
 
   @Autowired TransferService transferService;
+  @Autowired UserService userService;
 
   /**
    * this method will add cash to the current user balance.
@@ -57,7 +61,6 @@ public class TransferControllerImpl implements TransferController {
   @ResponseStatus(HttpStatus.ACCEPTED)
   public String removeCash(@RequestParam String amount, Principal principal) {
 
-
     // check if there is an user connected
     if (principal == null || principal.getName() == null) {
       throw new UserNotAuthenticatedException("KO - User must be authenticated");
@@ -81,11 +84,7 @@ public class TransferControllerImpl implements TransferController {
   @PostMapping(value = "/transfer", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
   public String createTransfer(
-      @Valid @ModelAttribute NewTransferDto newTransfer, Principal principal) {
-
-    //        if (bindingResult.hasErrors()){
-    //            throw new BadArgumentException("KO - error detected within form");
-    //        }
+          @Valid @ModelAttribute("newTransfer") NewTransferDto newTransfer, Principal principal) {
 
     // check principal
     if (principal == null || principal.getName() == null) {
@@ -117,6 +116,9 @@ public class TransferControllerImpl implements TransferController {
 
     List<GetTransferDto> transfers = transferService.getTransfers(principal.getName());
     model.addAttribute("transfers", transfers);
-    return "transfer-page";
+    Collection<ContactDto> contacts = userService.getAllContact(principal.getName());
+    model.addAttribute("contacts", contacts);
+
+    return "transfer-home";
   }
 }
