@@ -2,9 +2,7 @@ package com.paymybuddy.webbapp.controller;
 
 import com.paymybuddy.webbapp.dto.ContactDto;
 import com.paymybuddy.webbapp.exception.BadArgumentException;
-import com.paymybuddy.webbapp.exception.UserNotAuthenticatedException;
 import com.paymybuddy.webbapp.service.UserService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +38,6 @@ public class ContactControllerImpl implements ContactController {
     if (email == null || email.isBlank()) {
       throw new BadArgumentException("Error - blank email.");
     }
-    if (principal == null || principal.getName() == null) {
-      log.error("Error - user not logged in.");
-      return "plain-login";
-    }
     String userEmail = principal.getName();
 
     System.out.println(email);
@@ -63,9 +57,6 @@ public class ContactControllerImpl implements ContactController {
   @ResponseStatus(HttpStatus.ACCEPTED)
   public String deleteContact(@RequestParam String email, Principal principal) {
 
-    if (principal.getName() == null) {
-      throw new UserNotAuthenticatedException("Error - User not authenticated.");
-    }
     String userEmail = principal.getName();
     userService.deleteContact(email, userEmail);
     return "success";
@@ -82,11 +73,6 @@ public class ContactControllerImpl implements ContactController {
   @ResponseStatus(HttpStatus.OK)
   public String getContact(Principal principal, Model model) {
 
-    if (principal == null || principal.getName() == null) {
-
-      log.error("Error - user not logged in.");
-      return "plain-login";
-    }
     String userEmail = principal.getName();
 
     Collection<ContactDto> contacts = userService.getAllContact(userEmail);

@@ -8,7 +8,6 @@ import com.paymybuddy.webbapp.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +46,7 @@ public class RegistrationControllerImpl implements RegistrationController {
    * @return html page that confirm registration
    */
   @Override
-  @PostMapping(value = "/createNewUser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  @PostMapping( "/createNewUser")
   @ResponseStatus(HttpStatus.CREATED)
   public String registerNewUser(@Valid NewUserDto newUser, BindingResult bindingResult) {
     System.out.println("new user :" + newUser);

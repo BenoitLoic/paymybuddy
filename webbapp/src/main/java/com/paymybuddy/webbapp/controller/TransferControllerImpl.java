@@ -109,10 +109,6 @@ public class TransferControllerImpl implements TransferController {
   @GetMapping("/transfer")
   public String getTransfers(Model model, Principal principal) {
 
-    // check principal
-    if (principal == null || principal.getName() == null) {
-      throw new UserNotAuthenticatedException("KO - User must be authenticated");
-    }
 
     List<GetTransferDto> transfers = transferService.getTransfers(principal.getName());
     model.addAttribute("transfers", transfers);

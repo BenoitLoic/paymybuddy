@@ -11,98 +11,120 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = RegistrationControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class RegistrationControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
-    @MockBean
-    UserServiceImpl userServiceMock;
+  @Autowired MockMvc mockMvc;
 
-private final String createUserUrl = "/registration/createNewUser";
-    private final int id = 1;
-    private final String email = "testmail";
-    private final String lastName = "John";
-    private final String firstName = "Doe";
-    private final String password = "testpassword";
-    private final int balance = 0;
-    private String phone;
-    private String addressPrefix;
-    private String addressNumber;
-    private String addressStreet;
-    private String zip;
-    private String city;
+  @MockBean
+  UserServiceImpl userServiceMock;
 
-    public NewUserDto getUserTest() {
+  private final String createUserUrl = "/registration/createNewUser";
+  private final int id = 1;
+  private final String email = "testmail@mail.com";
+  private final String lastName = "John";
+  private final String firstName = "Doe";
+  private final String password = "testpassword";
+  private final int balance = 0;
+  private String phone;
+  private String addressPrefix;
+  private String addressNumber;
+  private String addressStreet;
+  private String zip;
+  private String city;
 
-        NewUserDto user = new NewUserDto();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPassword(password);
-        return user;
-    }
+  public NewUserDto getUserTest() {
 
+    NewUserDto user = new NewUserDto();
+    user.setFirstName(firstName);
+    user.setLastName(lastName);
+    user.setEmail(email);
+    user.setPassword(password);
+    return user;
+  }
 
-    @Test
-    public void createUserValid() throws Exception {
-        //GIVEN
-        NewUserDto newUserDto = this.getUserTest();
+  @Test
+  public void createUserValid() throws Exception {
+    // GIVEN
+    System.out.println("start");
+    NewUserDto newUserDto = this.getUserTest();
+    System.out.println(newUserDto);
+    // WHEN
 
-        //WHEN
+    // THEN
+    mockMvc
+        .perform(
+            post(createUserUrl)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content(
+                    "firstName="
+                        + newUserDto.getFirstName()
+                        + "&lastName="
+                        + newUserDto.getLastName()
+                        + "&email="
+                        + newUserDto.getEmail()
+                        + "&password="
+                        + newUserDto.getPassword())
+        )
 
-        //THEN
-        mockMvc
-                .perform(
-                        post(createUserUrl)
-                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                                .content("firstName="+newUserDto.getFirstName()+"&lastName="+newUserDto.getLastName()+"&email="+newUserDto.getEmail()+"&password="+newUserDto.getPassword()))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+        .andExpect(
+                status().isCreated());
+  }
 
-    }
+  @Test
+  public void createUserInvalid() throws Exception {
 
-    @Test
-    public void createUserInvalid() throws Exception {
+    // GIVEN
+    NewUserDto newUserDto = this.getUserTest();
+    newUserDto.setPassword(" ");
+    // WHEN
 
-        //GIVEN
-        NewUserDto newUserDto = this.getUserTest();
-newUserDto.setPassword(" ");
-        //WHEN
+    // THEN
+    mockMvc
+        .perform(
+            post(createUserUrl)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content(
+                    "firstName="
+                        + newUserDto.getFirstName()
+                        + "&lastName="
+                        + newUserDto.getLastName()
+                        + "&email="
+                        + newUserDto.getEmail()
+                        + "&password="
+                        + newUserDto.getPassword()))
+        .andExpect(status().isBadRequest());
+  }
 
-        //THEN
-        mockMvc.perform(
-                post(createUserUrl)
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .content("firstName="+newUserDto.getFirstName()+"&lastName="+newUserDto.getLastName()+"&email="+newUserDto.getEmail()+"&password="+newUserDto.getPassword()))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  @Test
+  public void createUserWhen_UserAlreadyExist() throws Exception {
 
-    }
+    //        GIVEN
+    NewUserDto newUserDto = this.getUserTest();
 
-    @Test
-    public void createUserWhen_UserAlreadyExist() throws Exception {
+    //        WHEN
+    Mockito.doThrow(DataAlreadyExistException.class).when(userServiceMock).save(Mockito.any());
 
-//        GIVEN
-        NewUserDto newUserDto = this.getUserTest();
+    //        THEN
 
-
-//        WHEN
-        Mockito.doThrow(DataAlreadyExistException.class)
-                .when(userServiceMock)
-                .save(Mockito.any());
-
-//        THEN
-
-        mockMvc.perform(
-                post(createUserUrl)
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .content("firstName="+newUserDto.getFirstName()+"&lastName="+newUserDto.getLastName()+"&email="+newUserDto.getEmail()+"&password="+newUserDto.getPassword()))
-                .andExpect(MockMvcResultMatchers.status().isConflict());
-    }
-
+    mockMvc
+        .perform(
+            post(createUserUrl)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content(
+                    "firstName="
+                        + newUserDto.getFirstName()
+                        + "&lastName="
+                        + newUserDto.getLastName()
+                        + "&email="
+                        + newUserDto.getEmail()
+                        + "&password="
+                        + newUserDto.getPassword()))
+        .andExpect(status().isConflict());
+  }
 }

@@ -6,6 +6,7 @@ import com.paymybuddy.webbapp.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import java.security.Principal;
 
 /** This class contains some method to manage the user account. */
 @Controller
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("/home")
 public class AccountControllerImpl implements AccountController {
 
@@ -35,10 +37,6 @@ public class AccountControllerImpl implements AccountController {
   public String getUserAccount(Principal principal, Model model) {
 
 
-
-    if (principal==null||principal.getName() == null) {
-      return "plain-login";
-    }
     String email = principal.getName();
     User user = userService.findByEmail(email).get();
     GetUserAccountDto theUser = new GetUserAccountDto();
@@ -56,6 +54,7 @@ public class AccountControllerImpl implements AccountController {
    * @return the html form.
    */
   @Override
+
   @GetMapping("/profile")
   @ResponseStatus(HttpStatus.OK)
   public String getUserProfile(Principal principal, Model model) {
