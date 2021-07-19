@@ -8,8 +8,7 @@ import java.security.Principal;
 public interface AccountController {
 
   /**
-   * This method will return the home page of the current user if authenticated. Else -> redirect to
-   * login page.
+   * This method will return the home page of the current user if authenticated.
    *
    * @param principal the current authenticated user.
    * @param model the user information saved.

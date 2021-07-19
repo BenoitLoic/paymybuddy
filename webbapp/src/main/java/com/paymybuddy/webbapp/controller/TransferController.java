@@ -5,6 +5,12 @@ import org.springframework.ui.Model;
 
 import java.security.Principal;
 
+/**
+ * Controller for Transfer endpoints.
+ *
+ * <p>Contains method to add/remove currency from user balance. Contains method to create a new
+ * transaction and get all transfer for the authenticated user.
+ */
 public interface TransferController {
   /**
    * this method will add cash to the current user balance.

@@ -5,6 +5,8 @@ import com.paymybuddy.webbapp.exception.BadArgumentException;
 import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 
+/**
+ * Implementation for RegistrationController.
+ *
+ * <p>Contains method to get and post the register form.
+ */
 @Controller
 @RequestMapping("/registration")
 public class RegistrationControllerImpl implements RegistrationController {
 
   private final UserService userService;
+
+  private final Logger log = LogManager.getLogger(getClass().getName());
 
   @Autowired
   public RegistrationControllerImpl(UserService userService) {
@@ -36,6 +45,9 @@ public class RegistrationControllerImpl implements RegistrationController {
   @Override
   @GetMapping("/signUp")
   public String signUp() {
+
+    log.trace("Returning registration Form.");
+
     return "registration-page";
   }
 
@@ -46,25 +58,26 @@ public class RegistrationControllerImpl implements RegistrationController {
    * @return html page that confirm registration
    */
   @Override
-  @PostMapping( "/createNewUser")
+  @PostMapping("/createNewUser")
   @ResponseStatus(HttpStatus.CREATED)
   public String registerNewUser(@Valid NewUserDto newUser, BindingResult bindingResult) {
-    System.out.println("new user :" + newUser);
+    log.trace("New user :" + newUser);
     // Check if there is error in validation
     if (bindingResult.hasErrors()) {
-      System.out.println(bindingResult.getFieldError());
+      log.warn(bindingResult.getFieldError());
       throw new BadArgumentException("KO - error in registration form.");
     }
 
     // Check if email already exist in DB.
 
     if (userService.findByEmail(newUser.getEmail()).isPresent()) {
+      log.error("KO - user: " + newUser.getEmail() + " already exist.");
       throw new DataAlreadyExistException("KO - user: " + newUser.getEmail() + " already exist.");
     }
 
     UserModel user = new UserModel();
     BeanUtils.copyProperties(newUser, user);
-
+    log.trace("savind user : " + user);
     // Create user
     userService.save(user);
 

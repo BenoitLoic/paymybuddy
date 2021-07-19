@@ -1,5 +1,10 @@
 package com.paymybuddy.webbapp.controller;
 
+/**
+ * Interface for LoginController.
+ *
+ * Contain method to return the welcome page and the login page.
+ */
 public interface LoginController {
 
   /**

@@ -9,11 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.security.Principal;
 import java.util.Collection;
 
+/**
+ * Implementation for ContactController.
+ *
+ * <p>Contain method to add/delete/getAll Contact for the authenticated user.
+ */
 @Controller
 public class ContactControllerImpl implements ContactController {
 
@@ -26,7 +35,7 @@ public class ContactControllerImpl implements ContactController {
   }
 
   /**
-   * This method add a new contact to a user ContactList with the email of its future contact
+   * This method add a new contact to a user ContactList with the email of its future contact.
    *
    * @param email of the contact to add // * @param principal current user logged in
    */
@@ -36,11 +45,12 @@ public class ContactControllerImpl implements ContactController {
   public String addContact(@RequestParam String email, Principal principal) {
 
     if (email == null || email.isBlank()) {
+      log.warn("KO - invalid Email : " + email);
       throw new BadArgumentException("Error - blank email.");
     }
     String userEmail = principal.getName();
 
-    System.out.println(email);
+    log.info("Saving new contact : " + email + " - for user : " + userEmail);
     userService.addNewContact(email, userEmail);
     return "success";
   }
@@ -58,6 +68,7 @@ public class ContactControllerImpl implements ContactController {
   public String deleteContact(@RequestParam String email, Principal principal) {
 
     String userEmail = principal.getName();
+    log.info("Deleting contact : " + email + " - for user : " + userEmail);
     userService.deleteContact(email, userEmail);
     return "success";
   }
@@ -74,9 +85,8 @@ public class ContactControllerImpl implements ContactController {
   public String getContact(Principal principal, Model model) {
 
     String userEmail = principal.getName();
-
+    log.info("Get contact list for user : " + userEmail);
     Collection<ContactDto> contacts = userService.getAllContact(userEmail);
-
     model.addAttribute("contacts", contacts);
     return "contact-page";
   }

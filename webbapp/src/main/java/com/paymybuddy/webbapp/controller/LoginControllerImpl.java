@@ -3,8 +3,14 @@ package com.paymybuddy.webbapp.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * Implementation for LoginController.
+ *
+ * <p>Contain method to return the welcome page and the login page.
+ */
 @Controller
 public class LoginControllerImpl implements LoginController {
+
 
   /**
    * This method will return the welcome page of the app. This page doesn't need authentication.
@@ -14,6 +20,7 @@ public class LoginControllerImpl implements LoginController {
   @Override
   @GetMapping("/")
   public String welcomePage() {
+
     return "welcome-page";
   }
 
@@ -25,6 +32,7 @@ public class LoginControllerImpl implements LoginController {
   @Override
   @GetMapping("/showLoginPage")
   public String showLoginPage() {
+
     return "plain-login";
   }
 }

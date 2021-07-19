@@ -11,6 +11,8 @@ import com.paymybuddy.webbapp.exception.IllegalContactException;
 import com.paymybuddy.webbapp.exception.InvalidBalanceException;
 import com.paymybuddy.webbapp.repository.TransferRepository;
 import com.paymybuddy.webbapp.repository.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implementation of transferService. Contain some method to add/remove currency from user balance.
+ * Implementation for transferService. Contain some method to add/remove currency from user balance.
  * Contain some method to create/get transfer.
  */
 @Service
@@ -30,6 +32,7 @@ public class TransferServiceImpl implements TransferService {
 
   private final UserRepository userRepository;
   private final TransferRepository transferRepository;
+  private final Logger log = LogManager.getLogger(getClass().getName());
 
   @Autowired
   public TransferServiceImpl(UserRepository userRepository, TransferRepository transferRepository) {
@@ -47,27 +50,30 @@ public class TransferServiceImpl implements TransferService {
 
     // Check amount > 0
     if (theAmount < 1) {
+      log.warn("KO - Amount must be > 0. Amount : " + theAmount);
       throw new BadArgumentException("KO - Amount must be > 0.");
     }
     // Get User
+
     Optional<User> userOptional = userRepository.findByEmail(email);
 
     if (userOptional.isEmpty()) {
+      log.warn("KO - Can't find user: " + email);
       throw new DataNotFindException("KO - Can't find user: " + email);
     }
-    System.out.println(theAmount);
-    BigDecimal amount = BigDecimal.valueOf(theAmount).setScale(3, RoundingMode.HALF_DOWN);
-    System.out.println(amount);
-    User user = userOptional.get();
 
+    BigDecimal amount = BigDecimal.valueOf(theAmount).setScale(3, RoundingMode.HALF_DOWN);
+    User user = userOptional.get();
+    log.info("Adding amount : " + amount + " to user balance : " + email);
     // Add Amount
     BigDecimal userBalance = user.getBalance();
-    System.out.println("maount : " + amount + " balance : " + userBalance);
+
     user.setBalance(amount.add(userBalance));
-    System.out.println("userBalance : " + userBalance);
-    System.out.println("final user balance : " + user.getBalance());
+    log.trace("UserBalance : " + userBalance);
+    log.trace("Final user balance : " + user.getBalance());
     // save
     userRepository.save(user);
+    log.info("Succressfully added " + amount + " to user : " + email);
   }
 
   /**
@@ -81,16 +87,19 @@ public class TransferServiceImpl implements TransferService {
     BigDecimal amount = new BigDecimal(theAmount).setScale(3, RoundingMode.HALF_DOWN);
 
     if (amount.signum() <= 0) {
+      log.warn("KO - Amount must be > 0.");
       throw new BadArgumentException("KO - Amount must be > 0.");
     }
     // Get User
     Optional<User> userOptional = userRepository.findByEmail(email);
     if (userOptional.isEmpty()) {
+      log.warn("KO - Can't find user: " + email);
       throw new DataNotFindException("KO - Can't find user: " + email);
     }
     // Check User Balance
     User user = userOptional.get();
     BigDecimal userBalance = user.getBalance().setScale(3, RoundingMode.HALF_DOWN);
+    log.trace("User balance = " + userBalance);
     BigDecimal checkResult = userBalance.subtract(amount);
     // Add Amount and Check if initialBalance + theAmount < Integer.MAX
     if (checkResult.signum() >= 0) {
@@ -98,7 +107,9 @@ public class TransferServiceImpl implements TransferService {
 
       // save
       userRepository.save(user);
+      log.info("Successfully removed " + theAmount + " from balance.");
     } else {
+      log.warn("Error - Balance can't be negative. Balance : " + checkResult);
       throw new InvalidBalanceException("Error - Balance can't be negative.");
     }
   }
@@ -112,6 +123,7 @@ public class TransferServiceImpl implements TransferService {
   @Transactional
   public GetTransferDto createTransfer(NewTransferDto newTransferDto) {
 
+    log.info("Creating new transfer - " + newTransferDto);
     // get user (debtor)
     Optional<User> opUser = userRepository.findByEmail(newTransferDto.getDebtorEmail());
     User debtor = new User();
@@ -123,8 +135,9 @@ public class TransferServiceImpl implements TransferService {
 
     BigDecimal charge = amount.multiply(Fare.TRANSACTION_FARE);
 
-    // check user balance0.51.01.52.0SundayMondayTuesdayWednesdayThurs
+    // check user balance
     if (debtor.getBalance().compareTo(amount.add(charge)) < 0) {
+      log.warn("Error InvalidBalanceException - Amount > balance for user : " + debtor.getEmail());
       throw new InvalidBalanceException("Error - Amount > balance for user : " + debtor.getEmail());
     }
 
@@ -137,8 +150,9 @@ public class TransferServiceImpl implements TransferService {
     }
 
     if (creditor.getEmail() == null) {
+      log.warn("Error - User: " + newTransferDto.getCreditorEmail() + " NOT in contacts.");
       throw new IllegalContactException(
-          "Error - User: " + newTransferDto.getCreditorEmail() + " in contacts.");
+          "Error - User: " + newTransferDto.getCreditorEmail() + " NOT in contacts.");
     }
     // add charge to appAccount
     User app = userRepository.getById(1);
@@ -158,9 +172,14 @@ public class TransferServiceImpl implements TransferService {
     transfer.setDescription(newTransferDto.getDescription());
 
     // save in repository
+    log.info("Saving Charge - charge : " + charge);
     userRepository.save(app);
+
+    log.info("Updating creditor and debtor.");
     userRepository.save(creditor);
     userRepository.save(debtor);
+
+    log.info("Saving transfer.");
     transferRepository.save(transfer);
 
     return new GetTransferDto(
@@ -175,6 +194,8 @@ public class TransferServiceImpl implements TransferService {
   @Override
   public List<GetTransferDto> getTransfers(String userEmail) {
 
+    log.info("Getting transfer for user : " + userEmail);
+
     Optional<User> userOp = userRepository.findByEmail(userEmail);
 
     int userId = 0;
@@ -183,14 +204,14 @@ public class TransferServiceImpl implements TransferService {
     }
 
     List<GetTransferDto> transactions = new ArrayList<>();
-
+    log.info("Getting transaction as creditor - id: " + userId);
     for (Transfer transfer : transferRepository.findAllByCreditorId(userId)) {
       GetTransferDto temp =
           new GetTransferDto(
               transfer.getDebtor().getFirstName(), transfer.getDescription(), transfer.getAmount());
       transactions.add(temp);
     }
-
+    log.info("Getting transaction as debtor - id: " + userId);
     for (Transfer transfer : transferRepository.findAllByDebtorId(userId)) {
       GetTransferDto temp =
           new GetTransferDto(
@@ -199,7 +220,7 @@ public class TransferServiceImpl implements TransferService {
               transfer.getAmount().negate());
       transactions.add(temp);
     }
-
+    log.info("User: " + userId + " - " + transactions.size() + " transactions.");
     return transactions;
   }
 }

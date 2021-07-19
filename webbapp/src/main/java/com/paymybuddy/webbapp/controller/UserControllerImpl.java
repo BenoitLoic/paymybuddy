@@ -2,6 +2,8 @@ package com.paymybuddy.webbapp.controller;
 
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,8 @@ public class UserControllerImpl implements UserController {
 
   @Autowired private UserService userService;
 
+  private final Logger log = LogManager.getLogger(getClass().getName());
+
   /**
    * This method will delete an user account.
    *
@@ -26,8 +30,9 @@ public class UserControllerImpl implements UserController {
   @ResponseStatus(HttpStatus.ACCEPTED)
   public String deleteUser(@RequestParam int id) {
 
+    log.info("Deleting User with id : " + id);
     userService.deleteUserById(id);
-
+    log.info("OK - user deleted.");
     return "success";
   }
 
@@ -42,7 +47,9 @@ public class UserControllerImpl implements UserController {
   @ResponseStatus(HttpStatus.CREATED)
   public String updateUser(UserModel theUser) {
 
+    log.info("Updating User : " + theUser.getEmail());
     userService.update(theUser);
+    log.info("OK - user updated.");
 
     return "success";
   }
@@ -56,6 +63,8 @@ public class UserControllerImpl implements UserController {
   @GetMapping("/users")
   @ResponseBody
   public List<UserModel> findAll() {
+
+    log.info("Getting all user.");
     return userService.findAll();
   }
 }

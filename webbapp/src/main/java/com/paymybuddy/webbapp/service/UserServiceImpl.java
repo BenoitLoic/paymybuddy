@@ -6,7 +6,8 @@ import com.paymybuddy.webbapp.exception.DataAlreadyExistException;
 import com.paymybuddy.webbapp.exception.DataNotFindException;
 import com.paymybuddy.webbapp.model.UserModel;
 import com.paymybuddy.webbapp.repository.UserRepository;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
 
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final Logger log = LogManager.getLogger(getClass().getName());
 
   @Autowired
   public UserServiceImpl(
@@ -36,7 +38,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void save(UserModel theUser) {
-
+    log.info("Saving user : " + theUser);
     User user = new User();
     BeanUtils.copyProperties(theUser, user);
 
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService {
     }
     // Save user using JpaRepository.save
     userRepository.save(user);
+    log.info("Successfully saved user.");
   }
 
   /**
@@ -55,50 +58,62 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void update(UserModel theUser) {
-
+    log.info("Updating user : " + theUser.getEmail());
     if (!userRepository.existsById(theUser.getId())) {
+      log.warn("ERROR DataNotFindException - Can't find account for user: " + theUser.getEmail());
       throw new DataNotFindException("Can't find account for user: " + theUser.getEmail());
     }
     // Copy non null field from user model to user entity
     User userEntity = userRepository.getById(theUser.getId());
 
     if (theUser.getFirstName() != null && !theUser.getFirstName().isBlank()) {
+      log.trace("Updating : firstName");
       userEntity.setFirstName(theUser.getFirstName());
     }
 
     if (theUser.getLastName() != null && !theUser.getLastName().isBlank()) {
+      log.trace("Updating : lastName");
       userEntity.setLastName(theUser.getLastName());
     }
 
     if (theUser.getEmail() != null && !theUser.getEmail().isBlank()) {
+      log.trace("Updating : email");
       userEntity.setEmail(theUser.getEmail());
     }
 
     if (theUser.getPassword() != null && !theUser.getPassword().isBlank()) {
+      log.trace("Updating : password");
       userEntity.setPassword(bCryptPasswordEncoder.encode(theUser.getPassword()));
     }
     if (theUser.getPhone() != null && !theUser.getPhone().isBlank()) {
+      log.trace("Updating : phone");
       userEntity.setPhone(theUser.getPhone());
     }
 
     if (theUser.getAddressPrefix() != null && !theUser.getAddressPrefix().isBlank()) {
+      log.trace("Updating : addressPrefix");
       userEntity.setAddressPrefix(theUser.getAddressPrefix());
     }
     if (theUser.getAddressStreet() != null && !theUser.getAddressStreet().isBlank()) {
+      log.trace("Updating : addressStreet");
       userEntity.setAddressStreet(theUser.getAddressStreet());
     }
     if (theUser.getAddressStreet() != null && !theUser.getAddressNumber().isBlank()) {
+      log.trace("Updating : addressNumber");
       userEntity.setAddressNumber(theUser.getAddressNumber());
     }
     if (theUser.getCity() != null && !theUser.getCity().isBlank()) {
+      log.trace("Updating : city");
       userEntity.setCity(theUser.getCity());
     }
 
     if (theUser.getZip() != null && !theUser.getZip().isBlank()) {
+      log.trace("Updating : zip");
       userEntity.setZip(theUser.getZip());
     }
 
     userRepository.save(userEntity);
+    log.info("Successfully updated user.");
   }
 
   /**
@@ -108,13 +123,15 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void deleteUserById(int theId) {
-
+    log.info("Deleting user with id : " + theId);
     // Check if user exist
     if (!userRepository.existsById(theId)) {
+      log.warn("ERROR DataNotFindException - can't find user with id: " + theId);
       throw new DataNotFindException("KO - can't find user with id: " + theId);
     }
     // Delete user
     userRepository.deleteById(theId);
+    log.info("Successfully deleted user.");
   }
 
   /**
@@ -124,7 +141,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public List<UserModel> findAll() {
-
+    log.info("Getting all user.");
     List<UserModel> users = new ArrayList<>();
     for (User user : userRepository.findAll()) {
       UserModel temp = new UserModel();
@@ -168,9 +185,12 @@ public class UserServiceImpl implements UserService {
   @Override
   public void addNewContact(String contactEmail, String userEmail) {
 
+    log.info("Saving contact : " + contactEmail + " - user : " + userEmail);
+
     // check if user for contactEmail exist
     Optional<User> contactOp = userRepository.findByEmail(contactEmail);
     if (contactOp.isEmpty()) {
+      log.warn("ERROR DataNotFindException - can't find user: " + contactEmail);
       throw new DataNotFindException("KO - can't find user: " + contactEmail);
     }
     User contact = contactOp.get();
@@ -178,6 +198,9 @@ public class UserServiceImpl implements UserService {
     // check if contact already exist in userContactList
     User user = userRepository.findByEmail(userEmail).get();
     if (user.getContacts().contains(contact)) {
+      log.warn(
+          "ERROR DataAlreadyExistException - This contact is already linked, contact: "
+              + contactEmail);
       throw new DataAlreadyExistException(
           "KO - This contact is already linked, contact: " + contactEmail);
     }
@@ -185,6 +208,7 @@ public class UserServiceImpl implements UserService {
     // save and return firstName and lastName of contact
     user.getContacts().add(contact);
     userRepository.save(user);
+    log.info("Successfully added contact.");
   }
 
   /**
@@ -195,7 +219,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void deleteContact(String email, String userEmail) {
-
+    log.info("Deleting contact : " + email + " - user : " + userEmail);
     // get current user
     User user = userRepository.findByEmail(userEmail).get();
 
@@ -213,11 +237,13 @@ public class UserServiceImpl implements UserService {
       }
     }
     if (!deleted) {
+      log.warn("ERROR DataNotFindException - can't find user with email: " + email);
       throw new DataNotFindException("Error - can't find user with email: " + email);
     }
     contactList.remove(userToDelete);
     //  save
     userRepository.save(user);
+    log.info("Successfully removed contact.");
   }
 
   /**
@@ -228,7 +254,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public Collection<ContactDto> getAllContact(String userEmail) {
-
+    log.info("Getting all contact for user : " + userEmail);
     // Get User from repo
     Optional<User> optionalUser = userRepository.findByEmail(userEmail);
     User user = new User();
@@ -246,7 +272,7 @@ public class UserServiceImpl implements UserService {
           new ContactDto(contact.getFirstName(), contact.getLastName(), contact.getEmail());
       dtoCollection.add(temp);
     }
-
+    log.info("Returning " + dtoCollection.size() + " contacts.");
     // return a collection of ContactDto
     return dtoCollection;
   }

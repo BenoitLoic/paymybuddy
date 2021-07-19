@@ -6,7 +6,6 @@ import com.paymybuddy.webbapp.exception.IllegalContactException;
 import com.paymybuddy.webbapp.exception.InvalidBalanceException;
 import com.paymybuddy.webbapp.service.TransferServiceImpl;
 import com.paymybuddy.webbapp.service.UserServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.security.Principal;
-import java.util.Objects;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -263,31 +261,6 @@ public class TransferControllerImplTest {
 
     }
 
-    @Test
-    public void createTransferInvalidPrincipal() throws Exception {
-        // GIVEN
-        NewTransferDto transferDto = new NewTransferDto(creditorTest, amount, descriptionTest);
-
-        String urlEncoded = "creditorEmail=" + transferDto.getCreditorEmail()
-                + "&amount=" + transferDto.getAmount()
-                + "&description=" + transferDto.getDescription();
-
-        // WHEN
-        Mockito.when(principalMock.getName()).thenReturn(null);
-        // THEN
-        mockMvc
-                .perform(
-                        post(createTransferUrl)
-                                .principal(principalMock)
-                                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                                .content(urlEncoded))
-                .andExpect(status().isForbidden())
-                .andExpect(
-                        mvcResult -> Assertions.assertEquals(
-                                "KO - User must be authenticated",
-                                Objects.requireNonNull(mvcResult.getResolvedException()).getMessage()));
-
-    }
 
     @Test
     public void createTransferWhenContactIsInvalid_ShouldThrowIllegalContactException() throws Exception {

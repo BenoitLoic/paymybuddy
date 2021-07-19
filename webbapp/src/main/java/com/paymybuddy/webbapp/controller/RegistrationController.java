@@ -3,6 +3,11 @@ package com.paymybuddy.webbapp.controller;
 import com.paymybuddy.webbapp.dto.NewUserDto;
 import org.springframework.validation.BindingResult;
 
+/**
+ * Controller for registration endpoints.
+ *
+ * Contains method to get and post the register form.
+ */
 public interface RegistrationController {
 
   /**

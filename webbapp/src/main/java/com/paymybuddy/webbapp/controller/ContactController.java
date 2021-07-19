@@ -7,7 +7,7 @@ import java.security.Principal;
 /**
  * Interface for ContactController.
  *
- * <p>Contains method to add and delete a contact from a user account.
+ * <p>Contains method to add/delete/getAll contact from a user.
  */
 public interface ContactController {
 
