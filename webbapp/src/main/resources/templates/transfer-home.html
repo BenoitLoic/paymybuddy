@@ -15,16 +15,16 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand " style="background-color: mediumspringgreen;padding: 10px;border-radius: 10px;"
-           href="#">Pay My Buddy</a>
+           th:href="@{/home}" >Pay My Buddy</a>
         <div class="navbar justify-content-end" id="navbarSupportedContent">
             <div class="profile-head">
                 <ul class="nav " id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="home-tab" data-toggle="tab" th:href="@{/home}" role="tab"
+                        <a class="nav-link " id="home-tab" data-toggle="tab" th:href="@{/home}" role="tab"
                            aria-controls="home" aria-selected="true">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a th:href="@{/home/transfer}" class="nav-link" id="transfer-tab" data-toggle="tab"
+                        <a th:href="@{/home/transfer}" class="nav-link active" id="transfer-tab" data-toggle="tab"
                             role="tab" aria-controls="profile" aria-selected="false">Transfer</a>
                     </li>
                     <li class="nav-item">
@@ -45,7 +45,7 @@
 </nav>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb" style="margin-left: 2%">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/home}">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Transfer</li>
     </ol>
 </nav>
@@ -64,9 +64,9 @@
                 <form th:action="@{/newContact}" method="POST"
                       class="form-horizontal" style="width: 50%; align-items: center; ">
                     <div class="row">
-                        <div class="col">
+                        <label class="col">
                             <input type="text" name="email" placeholder="example@mail.com" class=" form-control">
-                        </div>
+                        </label>
 
                         <div class="col">
                             <button type="submit" class="btn btn-primary  ">ADD Buddy</button>
@@ -80,18 +80,20 @@
               class="form-horizontal ">
             <div style="padding: 5%; background-color: whitesmoke" class="row">
                 <div class="col form-group">
-                    <select type="text" name="creditorEmail" class="form-control"
-                            th:each="contact: ${contacts}">
-                        <option>Select a connection</option>
-                        <option th:text="${contact.email}">Select a connection</option>
-                    </select>
+                    <label >
+                        <select type="text" name="creditorEmail" class="form-control" id="contactSelection"
+                                th:each="contact: ${contacts}" >
+                            <option>Select a connection</option>
+                            <option th:text="${contact.email}">Select a connection</option>
+                        </select>
+                    </label>
                 </div>
-                <div class="col">
+                <label class="col">
                     <input type="text" name="amount" placeholder="amount" class="form-control text-end">
-                </div>
-                <div class="col">
+                </label>
+                <label class="col">
                     <input type="text" name="description" placeholder="description" class="form-control text-end">
-                </div>
+                </label>
                 <div class="col">
                     <button type="submit" class="btn btn-primary col-12">Pay</button>
                 </div>
@@ -124,23 +126,7 @@
 
             </div>
         </div>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+
     </div>
 </div>
 <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
