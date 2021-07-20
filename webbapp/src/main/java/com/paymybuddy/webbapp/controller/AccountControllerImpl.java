@@ -25,7 +25,7 @@ public class AccountControllerImpl implements AccountController {
 
   @Autowired UserService userService;
 
-  private Logger log = LogManager.getLogger(getClass().getName());
+  private final Logger log = LogManager.getLogger(getClass().getName());
 
   /**
    * This method will return the home page of the current user if authenticated. Else -> redirect to

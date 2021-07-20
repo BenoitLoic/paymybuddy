@@ -27,15 +27,15 @@
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/home/transfer}" class="nav-link active" id="transfer-tab" data-toggle="tab"
-                            role="tab" aria-controls="profile" aria-selected="false">Transfer</a>
+                           role="tab" aria-controls="profile" aria-selected="false">Transfer</a>
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/home/profile}" class="nav-link" id="profile-tab" data-toggle="tab"
-                            role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                           role="tab" aria-controls="profile" aria-selected="false">Profile</a>
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/home/contact}" class="nav-link" id="contact-tab" data-toggle="tab"
-                            role="tab" aria-controls="profile" aria-selected="false">Contact</a>
+                           role="tab" aria-controls="profile" aria-selected="false">Contact</a>
                     </li>
                     <li class="nav-item">
                         <a href="javascript: logoutForm.submit()" role="menuitem" class="nav-link">Sign out</a>
@@ -82,11 +82,13 @@
               class="form-horizontal ">
             <div style="padding: 5%; background-color: whitesmoke" class="row">
                 <div class="col form-group">
-                    <label >
-                        <select type="text" name="creditorEmail" class="form-control" id="contactSelection"
-                                th:each="contact: ${contacts}" >
-                            <option>Select a connection</option>
-                            <option th:text="${contact.email}">Select a connection</option>
+                    <label>
+                        <select type="text" name="creditorEmail" class="form-control"
+                        >
+                            <option>Select a contact</option>
+                            <option th:each="contact: ${contacts}" th:text="${contact.email}"
+                                    th:value="${contact.email}">Select a connection
+                            </option>
                         </select>
                     </label>
                 </div>

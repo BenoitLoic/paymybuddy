@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller for User account administration.
+ *
+ * <p>Contains method to delete or update the user account.
+ */
 @Controller
 @RequestMapping("/home")
 public class UserControllerImpl implements UserController {
@@ -47,7 +52,7 @@ public class UserControllerImpl implements UserController {
   @ResponseStatus(HttpStatus.CREATED)
   public String updateUser(UserModel theUser) {
 
-    log.info("Updating User : " + theUser.getEmail());
+    log.info("Updating User : " + theUser.getId());
     userService.update(theUser);
     log.info("OK - user updated.");
 
