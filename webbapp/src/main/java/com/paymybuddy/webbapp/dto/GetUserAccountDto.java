@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
+/**
+ * Dto of user account.
+ *
+ * Contains field for account controller.
+ */
 public class GetUserAccountDto {
 
   private int id;

@@ -4,6 +4,11 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Entity for transaction table.
+ *
+ * <p>PK = id
+ */
 @Entity
 @Table(name = "transaction")
 public class Transfer {

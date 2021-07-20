@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Implementation for UserDetails.
+ */
 public class UserDetailsImpl implements UserDetails {
 
   private final String userName;

@@ -3,6 +3,11 @@ package com.paymybuddy.webbapp.dto;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Dto of transfer creation.
+ *
+ * <p>Used in transfer controller.
+ */
 public class NewTransferDto {
 
   @NotBlank private String creditorEmail;
@@ -16,6 +21,13 @@ public class NewTransferDto {
 
   private String description;
 
+  /**
+   * Constructor with parameters.
+   *
+   * @param creditorEmail email of the contact who get the money.
+   * @param amount the amount of money with 2 decimals.
+   * @param description small description.
+   */
   public NewTransferDto(String creditorEmail, double amount, String description) {
     this.creditorEmail = creditorEmail;
     this.amount = amount;

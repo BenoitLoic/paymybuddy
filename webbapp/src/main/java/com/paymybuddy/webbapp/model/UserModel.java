@@ -2,6 +2,9 @@ package com.paymybuddy.webbapp.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * Model for User entity.
+ */
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class UserModel {
 

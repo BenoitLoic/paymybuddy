@@ -2,6 +2,7 @@ package com.paymybuddy.webbapp.dto;
 
 import java.util.Objects;
 
+/** Dto for contact. */
 public class ContactDto {
 
   private String firstName;
@@ -10,6 +11,13 @@ public class ContactDto {
 
   public ContactDto() {}
 
+  /**
+   * Constructor for contact Dto.
+   *
+   * @param firstName of the contact.
+   * @param lastName of the contact.
+   * @param email of the contact.
+   */
   public ContactDto(String firstName, String lastName, String email) {
     this.firstName = firstName;
     this.lastName = lastName;

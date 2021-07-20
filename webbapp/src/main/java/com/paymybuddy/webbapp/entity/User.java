@@ -6,6 +6,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Entity for user table.
+ *
+ * <p>PK = id
+ */
 @Entity
 @Table(
     name = "user",

@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+/**
+ * Dto for transfer controller.
+ */
 public class GetTransferDto {
 
   private String contactName;
@@ -12,6 +15,12 @@ public class GetTransferDto {
 
   public GetTransferDto() {}
 
+  /**
+   * Constructor with all parameters.
+   * @param contactName the contact name.
+   * @param description small description of the transfer.
+   * @param amount the amount transferred with 2 decimals
+   */
   public GetTransferDto(String contactName, String description, BigDecimal amount) {
     this.contactName = contactName;
     this.description = description;

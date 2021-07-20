@@ -3,6 +3,11 @@ package com.paymybuddy.webbapp.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Dto for user account creation.
+ *
+ * <p>Used in Registration controller.
+ */
 public class NewUserDto {
 
   private final int id = 0;
