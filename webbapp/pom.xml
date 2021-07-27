@@ -107,7 +107,7 @@
                         <goals>
                             <goal>test</goal>
                         </goals>
-                        <phase>integration-test</phase>
+                        <phase>verify</phase>
                         <configuration>
                             <excludes>
                                 <exclude>none</exclude>
@@ -148,7 +148,7 @@
                     </execution>
                     <execution>
                         <id>integration-test-report</id>
-                        <phase>integration-test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>

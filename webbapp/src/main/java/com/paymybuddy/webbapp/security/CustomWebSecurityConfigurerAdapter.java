@@ -37,7 +37,9 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
         .loginPage("/showLoginPage")
         .permitAll()
         .loginProcessingUrl("/authenticateTheUser")
-        .defaultSuccessUrl("/home").and().httpBasic();
+        .defaultSuccessUrl("/home")
+        .and()
+        .httpBasic();
   }
 
   @Bean

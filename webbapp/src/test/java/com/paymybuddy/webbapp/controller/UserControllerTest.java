@@ -3,6 +3,7 @@ package com.paymybuddy.webbapp.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.paymybuddy.webbapp.dto.GetUserAccountDto;
 import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.exception.DataNotFindException;
 import com.paymybuddy.webbapp.service.UserServiceImpl;
@@ -19,8 +20,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.Optional;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(controllers = UserControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -82,7 +86,8 @@ public class UserControllerTest {
             MockMvcRequestBuilders.put("/home/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonNodes.toString()))
-        .andExpect(MockMvcResultMatchers.status().isCreated());
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(view().name("success"));
   }
 
   //    @Test
@@ -139,7 +144,8 @@ public class UserControllerTest {
     // THEN
     mockMvc
         .perform(MockMvcRequestBuilders.delete("/home/user").param("id", validParam))
-        .andExpect(MockMvcResultMatchers.status().isAccepted());
+        .andExpect(MockMvcResultMatchers.status().isAccepted())
+        .andExpect(view().name("plain-login"));
   }
 
   @Test
@@ -175,7 +181,11 @@ public class UserControllerTest {
   public void getUserAccountValid() throws Exception {
 
     // GIVEN
-
+    GetUserAccountDto user = new GetUserAccountDto();
+    user.setEmail(email);
+    user.setLastName(lastName);
+    user.setFirstName(firstName);
+    user.setBalance(new BigDecimal(0));
     // WHEN
     Mockito.when(principalMock.getName()).thenReturn(email);
     Mockito.when(userServiceMock.findByEmail(email)).thenReturn(Optional.of(this.getUserTest()));
@@ -183,6 +193,29 @@ public class UserControllerTest {
     // THEN
     mockMvc
         .perform(MockMvcRequestBuilders.get(getUserAccountUrl).principal(principalMock))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(view().name("home"))
+        .andExpect(MockMvcResultMatchers.model().attribute("theUser", user));
+  }
+
+  @Test
+  public void getUserProfileValid() throws Exception {
+
+    // GIVEN
+    GetUserAccountDto user = new GetUserAccountDto();
+    user.setEmail(email);
+    user.setLastName(lastName);
+    user.setFirstName(firstName);
+    user.setBalance(new BigDecimal(0));
+    // WHEN
+    Mockito.when(principalMock.getName()).thenReturn(email);
+    Mockito.when(userServiceMock.findByEmail(email)).thenReturn(Optional.of(this.getUserTest()));
+
+    // THEN
+    mockMvc
+            .perform(MockMvcRequestBuilders.get(getUserProfileUrl).principal(principalMock))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(view().name("edit-user-profile"))
+            .andExpect(MockMvcResultMatchers.model().attribute("theUser", user));
   }
 }

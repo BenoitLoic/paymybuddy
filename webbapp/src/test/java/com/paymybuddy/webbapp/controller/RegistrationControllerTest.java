@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(controllers = RegistrationControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -21,8 +22,7 @@ public class RegistrationControllerTest {
 
   @Autowired MockMvc mockMvc;
 
-  @MockBean
-  UserServiceImpl userServiceMock;
+  @MockBean UserServiceImpl userServiceMock;
 
   private final String createUserUrl = "/registration/createNewUser";
   private final int id = 1;
@@ -30,13 +30,8 @@ public class RegistrationControllerTest {
   private final String lastName = "John";
   private final String firstName = "Doe";
   private final String password = "testpassword";
-  private final int balance = 0;
-  private String phone;
-  private String addressPrefix;
-  private String addressNumber;
-  private String addressStreet;
-  private String zip;
-  private String city;
+
+
 
   public NewUserDto getUserTest() {
 
@@ -67,11 +62,9 @@ public class RegistrationControllerTest {
                         + "&email="
                         + newUserDto.getEmail()
                         + "&password="
-                        + newUserDto.getPassword())
-        )
-
-        .andExpect(
-                status().isCreated());
+                        + newUserDto.getPassword()))
+        .andExpect(status().isCreated())
+        .andExpect(view().name("registration-confirmation"));
   }
 
   @Test
