@@ -3,6 +3,7 @@ package com.paymybuddy.webbapp.service;
 import com.paymybuddy.webbapp.constants.Fare;
 import com.paymybuddy.webbapp.dto.GetTransferDto;
 import com.paymybuddy.webbapp.dto.NewTransferDto;
+import com.paymybuddy.webbapp.entity.Transfer;
 import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.exception.BadArgumentException;
 import com.paymybuddy.webbapp.exception.IllegalContactException;
@@ -20,6 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,7 +62,8 @@ class TransferServiceImplTest {
     transferService.addCash(amount, userEmail);
     // THEN
     //  verif que résult = add + init
-    Assertions.assertThat(user.getBalance()).isEqualTo(balance.add(BigDecimal.valueOf(amount).setScale(3)));
+    Assertions.assertThat(user.getBalance())
+        .isEqualTo(balance.add(BigDecimal.valueOf(amount).setScale(3)));
   }
 
   @Test
@@ -124,7 +128,7 @@ class TransferServiceImplTest {
 
     // GIVEN
     // valeur à soustraire 50
-String amount = "50.5";
+    String amount = "50.5";
     // valeur déjà présente 20
 
     user.setBalance(BigDecimal.valueOf(20));
@@ -163,7 +167,7 @@ String amount = "50.5";
 
     // WHEN
     Mockito.when(userRepositoryMock.findByEmail(debtor)).thenReturn(Optional.of(user));
-Mockito.when(userRepositoryMock.getById(1)).thenReturn(new User());
+    Mockito.when(userRepositoryMock.getById(1)).thenReturn(new User());
     GetTransferDto expected =
         new GetTransferDto(contact.getFirstName(), descriptionTest, BigDecimal.valueOf(amountD));
     GetTransferDto actual = transferService.createTransfer(newTransfer);
@@ -224,5 +228,92 @@ Mockito.when(userRepositoryMock.getById(1)).thenReturn(new User());
     // THEN
     org.junit.jupiter.api.Assertions.assertThrows(
         InvalidBalanceException.class, () -> transferService.createTransfer(newTransfer));
+  }
+
+  // email -> List<Transfer>
+  @Test
+  void getTransfersValid() {
+
+    // GIVEN
+    User user = new User();
+    user.setId(5);
+    List<Transfer> transfers1 = new ArrayList();
+    for (int i = 1; i < 5; i++) {
+      Transfer transfer = new Transfer();
+      transfer.setId(i);
+      transfer.setDebtorId(i);
+      transfer.setCreditorId(5);
+      transfer.setAmount(BigDecimal.valueOf(1.5 + i));
+      transfer.setDescription("");
+      User debtor = new User();
+      debtor.setFirstName("debtor" + i);
+      transfer.setDebtor(debtor);
+      transfers1.add(transfer);
+    }
+    List<Transfer> transfers2 = new ArrayList();
+    for (int i = 5; i < 7; i++) {
+      Transfer transfer = new Transfer();
+      transfer.setId(i);
+      transfer.setDebtorId(5);
+      transfer.setCreditorId(i);
+      transfer.setAmount(BigDecimal.valueOf(1.5 + i));
+      transfer.setDescription("");
+      User creditor = new User();
+      creditor.setFirstName("creditor" + i);
+      transfer.setCreditor(creditor);
+      transfers2.add(transfer);
+    }
+    // WHEN
+    Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
+    Mockito.when(transferRepositoryMock.findAllByCreditorId(Mockito.anyInt()))
+        .thenReturn(transfers1);
+    Mockito.when(transferRepositoryMock.findAllByDebtorId(Mockito.anyInt())).thenReturn(transfers2);
+    List<GetTransferDto> actual = transferService.getTransfers(userEmail);
+    // THEN
+    Assertions.assertThat(actual.size()).isEqualTo(transfers1.size() + transfers2.size());
+
+  }
+
+  @Test
+  void getTransfersWhenThereIsNoTransfer_ShouldReturnEmptyList() {
+
+    // GIVEN
+    User user = new User();
+    user.setId(15);
+    List<Transfer> transfers1 = new ArrayList();
+    for (int i = 1; i < 5; i++) {
+      Transfer transfer = new Transfer();
+      transfer.setId(i);
+      transfer.setDebtorId(i);
+      transfer.setCreditorId(5);
+      transfer.setAmount(BigDecimal.valueOf(1.5 + i));
+      transfer.setDescription("");
+      User debtor = new User();
+      debtor.setFirstName("debtor" + i);
+      transfer.setDebtor(debtor);
+      transfers1.add(transfer);
+    }
+    List<Transfer> transfers2 = new ArrayList();
+    for (int i = 5; i < 7; i++) {
+      Transfer transfer = new Transfer();
+      transfer.setId(i);
+      transfer.setDebtorId(5);
+      transfer.setCreditorId(i);
+      transfer.setAmount(BigDecimal.valueOf(1.5 + i));
+      transfer.setDescription("");
+      User creditor = new User();
+      creditor.setFirstName("creditor" + i);
+      transfer.setCreditor(creditor);
+      transfers2.add(transfer);
+    }
+    // WHEN
+    Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
+    Mockito.when(transferRepositoryMock.findAllByCreditorId(Mockito.anyInt()))
+            .thenReturn(new ArrayList<>());
+    Mockito.when(transferRepositoryMock.findAllByDebtorId(Mockito.anyInt())).thenReturn(new ArrayList<>());
+    List<GetTransferDto> actual = transferService.getTransfers(userEmail);
+    // THEN
+    Assertions.assertThat(actual.isEmpty()).isTrue();
+
   }
 }

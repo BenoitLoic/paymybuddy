@@ -51,9 +51,7 @@ public class RegistrationControllerTest {
   @Test
   public void createUserValid() throws Exception {
     // GIVEN
-    System.out.println("start");
     NewUserDto newUserDto = this.getUserTest();
-    System.out.println(newUserDto);
     // WHEN
 
     // THEN
