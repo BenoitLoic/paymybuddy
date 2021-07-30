@@ -1,7 +1,7 @@
 package com.paymybuddy.webbapp.integrationTest;
 
 import com.paymybuddy.webbapp.dto.ContactDto;
-import com.paymybuddy.webbapp.integrationTest.Repository.UserRepo;
+import com.paymybuddy.webbapp.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ContactIT {
 
-  @Autowired UserRepo userRepo;
+  @Autowired
+  UserRepository userRepo;
   @Autowired MockMvc mockMvc;
 
   private final String createUrl = "/newContact";

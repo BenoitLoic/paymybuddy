@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-/**
- * Dto for transfer controller.
- */
+/** Dto for transfer controller. */
 public class GetTransferDto {
 
   private String contactName;
@@ -17,6 +15,7 @@ public class GetTransferDto {
 
   /**
    * Constructor with all parameters.
+   *
    * @param contactName the contact name.
    * @param description small description of the transfer.
    * @param amount the amount transferred with 2 decimals
@@ -60,7 +59,9 @@ public class GetTransferDto {
       return false;
     }
     GetTransferDto that = (GetTransferDto) o;
-    return Objects.equals(contactName, that.contactName) && Objects.equals(description, that.description) && Objects.equals(amount, that.amount);
+    return Objects.equals(contactName, that.contactName)
+        && Objects.equals(description, that.description)
+        && Objects.equals(amount, that.amount);
   }
 
   @Override

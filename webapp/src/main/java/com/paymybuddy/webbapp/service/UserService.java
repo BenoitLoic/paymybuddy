@@ -3,17 +3,20 @@ package com.paymybuddy.webbapp.service;
 import com.paymybuddy.webbapp.dto.ContactDto;
 import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.model.UserModel;
-
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Interface for UserService.
+ * Contains method used by CRUD controller.
+ */
 public interface UserService {
   /**
    * This method save the given user by calling the repository.
    *
    * @param theUser to save
    */
-  void save(@javax.validation.Valid UserModel theUser);
+  void save(UserModel theUser);
 
   /**
    * This method update the user account by calling repository.
@@ -61,8 +64,7 @@ public interface UserService {
    */
   void deleteContact(String email, String userEmail);
 
-  /**
-   * This method returns a collection of all the contacts of the given user.
+  /** This method returns a collection of all the contacts of the given user.
    *
    * @param userEmail the user email.
    * @return all the contacts

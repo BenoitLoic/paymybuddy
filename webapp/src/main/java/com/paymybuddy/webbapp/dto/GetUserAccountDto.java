@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Dto of user account.
  *
- * Contains field for account controller.
+ * <p>Contains field for account controller.
  */
 public class GetUserAccountDto {
 
@@ -134,15 +134,42 @@ public class GetUserAccountDto {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     GetUserAccountDto that = (GetUserAccountDto) o;
-    return id == that.id && Objects.equals(email, that.email) && Objects.equals(lastName, that.lastName) && Objects.equals(firstName, that.firstName) && Objects.equals(balance, that.balance) && Objects.equals(phone, that.phone) && Objects.equals(addressPrefix, that.addressPrefix) && Objects.equals(addressNumber, that.addressNumber) && Objects.equals(addressStreet, that.addressStreet) && Objects.equals(zip, that.zip) && Objects.equals(city, that.city) && Objects.equals(lastUpdate, that.lastUpdate);
+    return id == that.id
+        && Objects.equals(email, that.email)
+        && Objects.equals(lastName, that.lastName)
+        && Objects.equals(firstName, that.firstName)
+        && Objects.equals(balance, that.balance)
+        && Objects.equals(phone, that.phone)
+        && Objects.equals(addressPrefix, that.addressPrefix)
+        && Objects.equals(addressNumber, that.addressNumber)
+        && Objects.equals(addressStreet, that.addressStreet)
+        && Objects.equals(zip, that.zip)
+        && Objects.equals(city, that.city)
+        && Objects.equals(lastUpdate, that.lastUpdate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, email, lastName, firstName, balance, phone, addressPrefix, addressNumber, addressStreet, zip, city, lastUpdate);
+    return Objects.hash(
+        id,
+        email,
+        lastName,
+        firstName,
+        balance,
+        phone,
+        addressPrefix,
+        addressNumber,
+        addressStreet,
+        zip,
+        city,
+        lastUpdate);
   }
 
   @Override

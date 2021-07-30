@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LoginControllerImpl implements LoginController {
 
-
   /**
    * This method will return the welcome page of the app. This page doesn't need authentication.
    *

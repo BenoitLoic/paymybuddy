@@ -6,7 +6,7 @@ import org.springframework.validation.BindingResult;
 /**
  * Controller for registration endpoints.
  *
- * Contains method to get and post the register form.
+ * <p>Contains method to get and post the register form.
  */
 public interface RegistrationController {
 

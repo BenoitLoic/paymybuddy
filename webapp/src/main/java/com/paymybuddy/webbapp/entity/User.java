@@ -1,6 +1,19 @@
 package com.paymybuddy.webbapp.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -91,6 +104,14 @@ public class User {
 
   public User() {}
 
+  /**
+   * Constructor with mandatory field only.
+   *
+   * @param email the user email
+   * @param lastName user last name
+   * @param firstName user first name
+   * @param password user password
+   */
   public User(String email, String lastName, String firstName, String password) {
     this.email = email;
     this.lastName = lastName;
@@ -138,6 +159,11 @@ public class User {
     this.password = password;
   }
 
+  /**
+   * This method return tu user balance.
+   *
+   * @return user's balance or 0.00 if balance==null
+   */
   public BigDecimal getBalance() {
     if (balance == null) {
       return new BigDecimal("0.00");

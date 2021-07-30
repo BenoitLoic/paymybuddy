@@ -3,7 +3,7 @@ package com.paymybuddy.webbapp.integrationTest;
 import com.paymybuddy.webbapp.dto.GetUserAccountDto;
 import com.paymybuddy.webbapp.dto.NewUserDto;
 import com.paymybuddy.webbapp.entity.User;
-import com.paymybuddy.webbapp.integrationTest.Repository.UserRepo;
+import com.paymybuddy.webbapp.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserIT {
 
   @Autowired MockMvc mockMvc;
-  @Autowired UserRepo userRepo;
+  @Autowired
+  UserRepository userRepo;
 
 
   @Transactional

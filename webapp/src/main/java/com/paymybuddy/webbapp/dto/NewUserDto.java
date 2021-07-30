@@ -11,13 +11,11 @@ import javax.validation.constraints.NotBlank;
 public class NewUserDto {
 
   private final int id = 0;
+  private final int balance = 0;
   @Email @NotBlank private String email;
   @NotBlank private String lastName;
   @NotBlank private String firstName;
   @NotBlank private String password;
-
-  private final int balance = 0;
-
   private String phone;
 
   private String addressPrefix;

@@ -1,12 +1,9 @@
 package com.paymybuddy.webbapp.model;
 
 import com.paymybuddy.webbapp.entity.User;
-
 import java.sql.Timestamp;
 
-/**
- * Model for Transfer entity.
- */
+/** Model for Transfer entity. */
 public class TransferModel {
 
   private int id;

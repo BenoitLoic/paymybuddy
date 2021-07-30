@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Collection;
@@ -34,9 +33,9 @@ import java.util.List;
 @RequestMapping("/home")
 public class TransferControllerImpl implements TransferController {
 
+  private final Logger log = LogManager.getLogger(getClass().getName());
   @Autowired TransferService transferService;
   @Autowired UserService userService;
-  private final Logger log = LogManager.getLogger(getClass().getName());
 
   /**
    * this method will add cash to the current user balance.

@@ -11,8 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import java.security.Principal;
 
 /**
@@ -24,9 +28,8 @@ import java.security.Principal;
 @RequestMapping("/home")
 public class UserControllerImpl implements UserController {
 
-  @Autowired private UserService userService;
-
   private final Logger log = LogManager.getLogger(getClass().getName());
+  @Autowired private UserService userService;
 
   /**
    * This method will delete an user account.
@@ -101,7 +104,7 @@ public class UserControllerImpl implements UserController {
 
     String email = principal.getName();
 
-    log.info("Getting user account for user : " + email );
+    log.info("Getting user account for user : " + email);
 
     User user = userService.findByEmail(email).get();
     GetUserAccountDto theUser = new GetUserAccountDto();

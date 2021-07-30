@@ -12,9 +12,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
-import java.util.*;
-
+/**
+ * Implementation for UserService.
+ * Contains method to create/delete/read/update user and contact.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 

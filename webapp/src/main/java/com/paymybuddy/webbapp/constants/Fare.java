@@ -2,9 +2,7 @@ package com.paymybuddy.webbapp.constants;
 
 import java.math.BigDecimal;
 
-/**
- * Constants for Fare/Charge.
- */
+/** Constants for Fare/Charge. */
 public class Fare {
 
   // 0.5% fare for each transaction

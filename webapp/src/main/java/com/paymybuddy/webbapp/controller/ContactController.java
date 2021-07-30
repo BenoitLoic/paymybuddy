@@ -1,7 +1,6 @@
 package com.paymybuddy.webbapp.controller;
 
 import org.springframework.ui.Model;
-
 import java.security.Principal;
 
 /**

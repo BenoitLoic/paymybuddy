@@ -10,6 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * Configuration for Spring security.
+ * ["/", "/showLoginPage", "/registration/**"] == permitAll
+ * any other request must be authenticated.
+ */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
