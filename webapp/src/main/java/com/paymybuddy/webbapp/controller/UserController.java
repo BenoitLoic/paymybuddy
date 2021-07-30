@@ -4,7 +4,6 @@ import com.paymybuddy.webbapp.model.UserModel;
 import org.springframework.ui.Model;
 
 import java.security.Principal;
-import java.util.List;
 
 /**
  * Controller for User account administration.
@@ -29,12 +28,6 @@ public interface UserController {
    */
   String updateUser(UserModel user);
 
-  /**
-   * This method will return a list of all the user account in data base.
-   *
-   * @return the list of users
-   */
-  List<UserModel> findAll();
   /**
    * This method will return the home page of the current user if authenticated.
    *

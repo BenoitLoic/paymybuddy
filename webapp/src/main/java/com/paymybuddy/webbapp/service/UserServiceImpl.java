@@ -135,26 +135,6 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * This method will return all user from repository
-   *
-   * @return List of all users
-   */
-  @Override
-  public List<UserModel> findAll() {
-    log.info("Getting all user.");
-    List<UserModel> users = new ArrayList<>();
-    for (User user : userRepository.findAll()) {
-      UserModel temp = new UserModel();
-      temp.setEmail(user.getEmail());
-      temp.setFirstName(user.getFirstName());
-      temp.setId(user.getId());
-      users.add(temp);
-    }
-
-    return users;
-  }
-
-  /**
    * This method will return an user from repository based on its id.
    *
    * @param theId of the user retrieve

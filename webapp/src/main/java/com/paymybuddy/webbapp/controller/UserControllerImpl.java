@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 /**
  * Controller for User account administration.
@@ -63,21 +62,6 @@ public class UserControllerImpl implements UserController {
 
     return "success";
   }
-
-  /**
-   * This method will return a list of all the user account in data base.
-   *
-   * @return the list of users
-   */
-  @Override
-  @GetMapping("/users")
-  @ResponseBody
-  public List<UserModel> findAll() {
-
-    log.info("Getting all user.");
-    return userService.findAll();
-  }
-
 
   /**
    * This method will return the home page of the current user if authenticated. Else -> redirect to

@@ -12,7 +12,7 @@ import java.security.Principal;
 public interface ContactController {
 
   /**
-   * This method add a new contact to a user ContactList with the email of its future contact
+   * This method add a new contact to a user ContactList with the email of its future contact.
    *
    * @param email email of the contact to add //@param principal current user logged in
    */

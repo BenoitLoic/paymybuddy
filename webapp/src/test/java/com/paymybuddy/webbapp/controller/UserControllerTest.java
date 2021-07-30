@@ -55,20 +55,6 @@ public class UserControllerTest {
   }
 
   @Test
-  public void findAllValid() throws Exception {
-
-    // GIVEN
-
-    // WHEN
-
-    // THEN
-    mockMvc
-        .perform(MockMvcRequestBuilders.get("/home/users"))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-  }
-
-  @Test
   public void updateUserValid() throws Exception {
     // GIVEN
     ObjectMapper objectMapper = new ObjectMapper();
@@ -90,28 +76,6 @@ public class UserControllerTest {
         .andExpect(view().name("success"));
   }
 
-  //    @Test
-  //    public void updateUserInvalid() throws Exception {
-  //
-  //        // GIVEN
-  //        ObjectMapper objectMapper = new ObjectMapper();
-  //        ObjectNode jsonNodes = objectMapper.createObjectNode();
-  //        jsonNodes.set("id", TextNode.valueOf("0"));
-  //        jsonNodes.set("firstName", TextNode.valueOf(firstName));
-  //        jsonNodes.set("lastName", TextNode.valueOf(lastName));
-  //        jsonNodes.set("email", TextNode.valueOf(email));
-  //
-  //        // WHEN
-  //
-  //        // THEN
-  //        mockMvc.perform(
-  //                MockMvcRequestBuilders.put("/V1/user")
-  //                        .contentType(MediaType.APPLICATION_JSON)
-  //                        .content(jsonNodes.toString()))
-  //                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-  //
-  //
-  //    }
 
   @Test
   public void updateUserValidWhenUserDontExist_ShouldThrowDataNotFindException() throws Exception {

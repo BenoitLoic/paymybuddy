@@ -5,7 +5,6 @@ import com.paymybuddy.webbapp.entity.User;
 import com.paymybuddy.webbapp.model.UserModel;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -29,13 +28,6 @@ public interface UserService {
    * @param theId of the user to delete
    */
   void deleteUserById(int theId);
-
-  /**
-   * This method will return all user from repository.
-   *
-   * @return List of all users
-   */
-  List<UserModel> findAll();
 
   /**
    * This method will return an user from repository based on its id.
