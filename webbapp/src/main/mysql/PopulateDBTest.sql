@@ -33,7 +33,7 @@ VALUES (5, 'merry@mail.com', 'Took', 'Merry', '$2a$10$qiVpUqQKa5Truu0j3QpRvuJVTp
         null, null, null, null, null, null, null, null);
 INSERT INTO pay_my_buddy_test.user (id, email, last_name, first_name, password, balance, phone, address_prefix,
                                     address_number, address_street, zip, city, account_creation, last_update)
-VALUES (6, 'bilbo@mail.com', 'Baggins', 'Bilbo', '$2a$10$qiVpUqQKa5Truu0j3QpRvuJVTpiTyWbyDGR.NvSG5hFBEH8N3hFaG',
+VALUES (8, 'bilbo@mail.com', 'Baggins', 'Bilbo', '$2a$10$qiVpUqQKa5Truu0j3QpRvuJVTpiTyWbyDGR.NvSG5hFBEH8N3hFaG',
         '500000', null, null, null, null, null, null, null, null);
 INSERT INTO pay_my_buddy_test.user (id, email, last_name, first_name, password, balance, phone, address_prefix,
                                     address_number, address_street, zip, city, account_creation, last_update)

@@ -3,16 +3,26 @@
 
 
 
-DB : MySql <br>
+DB : MySql 8<br>
 Java : 11 <br>
 Build : Maven 3.6.0 <br>
 SpringBoot : 2.5.0 <br>
-DB script : src/main/resources/create_db_mysql.sql <br><br>
-<h3>Modèle physique des données pour la base de données</h3><br>
+DB script : src/main/resources/create_db_mysql.sql (pay_my_buddy & pay_my_buddy_test)<br>
+src/test/resources/PopulateDBTest.sql (populate pay_my_buddy_test)<br>
+
+### Start application
+
+* copy/clone this project on your computer.
+* run sql query from webbapp/src/main/mysql/create_db_mysql.sql
+* run sql query from webbapp/src/main/mysql/PopulateDBTest.sql
+* run the following maven command on your terminal : cd {yourFolderName}/paymybuddy/webbapp && mvn spring-boot:run
+* Access endpoints on localhost:8080/ 
+
+### Modèle physique des données pour la base de données
 
 ![modèle physique des données pour la bdd](db_model.png)
 
-<h3>Diagramme de classe</h3><br>
+### Diagramme de classe
 
 ![diagramme de classe](classDiagram.png)
 

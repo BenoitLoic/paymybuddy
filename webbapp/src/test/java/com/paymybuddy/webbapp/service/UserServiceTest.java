@@ -41,12 +41,7 @@ class UserServiceTest {
     private final String firstName = "John";
     private final String password = "testpassword";
     private final int balance = 0;
-    private String phone;
-    private String addressPrefix;
-    private String addressNumber;
-    private String addressStreet;
-    private String zip;
-    private String city;
+
 
 
     @Test
@@ -59,7 +54,6 @@ class UserServiceTest {
         user.setEmail(email);
         user.setPassword(password);
 
-        User user1 = new User(email, lastName, firstName, password);
 //        WHEN
 
         userService.save(user);
@@ -168,9 +162,7 @@ class UserServiceTest {
 
         // GIVEN
         Optional<User> userToAdd = Optional.empty();
-        User user2 = new User(email + 1, lastName, firstName, password);
-        user2.setId(2);
-        Optional<User> userAccount = Optional.of(user2);
+
 
         // WHEN
         when(userRepositoryMock.findByEmail(email)).thenReturn(userToAdd);
@@ -210,7 +202,6 @@ class UserServiceTest {
         User contact = new User(email, lastName, firstName, password);
         contact.setId(id);
         user.getContacts().add(contact);
-        ContactDto expectedDto = new ContactDto(firstName, lastName, email);
         // WHEN
         when(userRepositoryMock.findByEmail("userEmail")).thenReturn(Optional.of(user));
 
@@ -228,7 +219,6 @@ class UserServiceTest {
 
         // GIVEN
         User user = new User(email, "userLastName", "userFirstName", "test");
-        User contact = new User("email", lastName, firstName, password);
 
 
         // WHEN

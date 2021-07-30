@@ -194,7 +194,6 @@ class TransferServiceImplTest {
 
     User user = new User(debtor, "lastNameUser", "firstNameUser", "pass");
     user.setBalance(balance);
-    User contact = new User(creditor, "lastNameContact", "firstNameContact", "pass");
 
     // WHEN
     Mockito.when(userRepositoryMock.findByEmail(debtor)).thenReturn(Optional.of(user));
@@ -280,32 +279,7 @@ class TransferServiceImplTest {
     // GIVEN
     User user = new User();
     user.setId(15);
-    List<Transfer> transfers1 = new ArrayList();
-    for (int i = 1; i < 5; i++) {
-      Transfer transfer = new Transfer();
-      transfer.setId(i);
-      transfer.setDebtorId(i);
-      transfer.setCreditorId(5);
-      transfer.setAmount(BigDecimal.valueOf(1.5 + i));
-      transfer.setDescription("");
-      User debtor = new User();
-      debtor.setFirstName("debtor" + i);
-      transfer.setDebtor(debtor);
-      transfers1.add(transfer);
-    }
-    List<Transfer> transfers2 = new ArrayList();
-    for (int i = 5; i < 7; i++) {
-      Transfer transfer = new Transfer();
-      transfer.setId(i);
-      transfer.setDebtorId(5);
-      transfer.setCreditorId(i);
-      transfer.setAmount(BigDecimal.valueOf(1.5 + i));
-      transfer.setDescription("");
-      User creditor = new User();
-      creditor.setFirstName("creditor" + i);
-      transfer.setCreditor(creditor);
-      transfers2.add(transfer);
-    }
+
     // WHEN
     Mockito.when(userRepositoryMock.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
     Mockito.when(transferRepositoryMock.findAllByCreditorId(Mockito.anyInt()))
