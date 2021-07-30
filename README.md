@@ -13,9 +13,9 @@ src/test/resources/PopulateDBTest.sql (populate pay_my_buddy_test)<br>
 ### Start application
 
 * copy/clone this project on your computer.
-* run sql query from webbapp/src/main/mysql/create_db_mysql.sql
-* run sql query from webbapp/src/main/mysql/PopulateDBTest.sql
-* run the following maven command on your terminal : cd {yourFolderName}/paymybuddy/webbapp && mvn spring-boot:run
+* run sql query from webapp/src/main/mysql/create_db_mysql.sql
+* run sql query from webapp/src/main/mysql/PopulateDBTest.sql
+* run the following maven command on your terminal : cd {yourFolderName}/paymybuddy/webapp && mvn spring-boot:run
 * Access endpoints on localhost:8080/ 
 
 ### Modèle physique des données pour la base de données

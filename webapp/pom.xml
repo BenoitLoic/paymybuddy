@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.paymybuddy</groupId>
-    <artifactId>webbapp</artifactId>
+    <artifactId>webapp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>webbapp</name>
+    <name>webapp</name>
     <description>Pay My Buddy - We make moving your money easy!</description>
     <properties>
         <java.version>11</java.version>
